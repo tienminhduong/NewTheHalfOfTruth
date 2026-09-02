@@ -1,14 +1,16 @@
+using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace CD
 {
+    [Serializable]
     public struct LoadSceneData
     {
         public AssetReference SceneToLoad;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class AnimClipReference : AssetReferenceT<AnimationClip>
     {
         public AnimClipReference(string guid) : base(guid) { }
