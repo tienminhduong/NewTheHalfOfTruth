@@ -22,18 +22,22 @@ public class BaseAnimSystem
 
     public BaseAnimSystem(Animator animator)
     {
-        _playableGraph = PlayableGraph.Create($"{animator.name} Animation System");
-        _playableOutput = AnimationPlayableOutput.Create(_playableGraph, "AnimationOutput", animator);
-
-        _playableGraph.Play();
+        SetupPlayableGraph(animator);
     }
 
-    public BaseAnimSystem(Animator animator, List<CD.AnimClipReference> animRefs)
+    public BaseAnimSystem(Animator animator, List<CD.AnimClipReference> animRefs, string defaultAnimKey = null)
     {
-
+        SetupPlayableGraph(animator);
+        PreloadAnimationClipsAsync(animRefs, defaultAnimKey).Forget();
     }
 
-    public async UniTask PreloadAnimationClipsAsync(List<CD.AnimClipReference> animRefs)
+    /// <summary>
+    /// Preloads animation clips asynchronously using Addressables.
+    /// </summary>
+    /// <param name="animRefs">List of animation clip references</param>
+    /// <param name="defaultAnimKey">The key of the default animation clip to play after loaded</param>
+    /// <returns></returns>
+    private async UniTask PreloadAnimationClipsAsync(List<CD.AnimClipReference> animRefs, string defaultAnimKey = null)
     {
         _isInitialized = false;
 
@@ -52,9 +56,20 @@ public class BaseAnimSystem
         await _preloadHandle.ToUniTask();
 
         if (_preloadHandle.Status == AsyncOperationStatus.Succeeded)
+        {
             _isInitialized = true;
+            if (!string.IsNullOrEmpty(defaultAnimKey))
+                PlayAnimation(defaultAnimKey);
+        }
         else
             Debug.LogError("Failed to preload animation clips.");
+    }
+
+    private void SetupPlayableGraph(Animator animator)
+    {
+        _playableGraph = PlayableGraph.Create($"{animator.name} Animation System");
+        _playableOutput = AnimationPlayableOutput.Create(_playableGraph, "AnimationOutput", animator);
+        _playableGraph.Play();
     }
 
     private void OnClipLoaded(AnimationClip clip)
@@ -74,7 +89,7 @@ public class BaseAnimSystem
         _loadedClips[clip.name] = clip;
     }
 
-    protected void PlayAnimation(AnimationClip clip)
+    public void PlayAnimation(AnimationClip clip)
     {
         if (clip == _activeClip)
             return;

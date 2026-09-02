@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Player
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Player
+  m_GUID: 57610804903c3644a89b5609923951dc
+  m_SerializeEntries:
+  - m_GUID: 1703bd0df20bf1d41a9f5fe28f6b1bd5
+    m_Address: Assets/GameAssets/Animations/Detective/IdleDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33d67cc5010a7b2419444667ac1adf18
+    m_Address: Assets/GameAssets/Animations/Detective/IdleLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9b3479925bb7f114b9cd5a60a91a2c57
+    m_Address: Assets/GameAssets/Animations/Detective/IdleRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9b66108880d5528449f5c8ff7a914acd
+    m_Address: Assets/GameAssets/Animations/Detective/WalkLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad69b07e3d80a9344a746056bff305b7
+    m_Address: Assets/GameAssets/Animations/Detective/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b82453376f99c98418a7551486f73e26
+    m_Address: Assets/GameAssets/Animations/Detective/WalkRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc6f4dad5e0e3a64eb9e60400e62b2a3
+    m_Address: Assets/GameAssets/Animations/Detective/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fd29364736af96b498f64231f873c15c
+    m_Address: Assets/GameAssets/Animations/Detective/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3d575db7c147364438764608736a8e2d, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 6d05c113e72f9a34097429fc3cc410e2, type: 2}
+    - {fileID: 11400000, guid: 8cd42edc917a5984e91e8a7e04b71e7c, type: 2}

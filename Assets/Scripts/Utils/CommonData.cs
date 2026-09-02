@@ -15,4 +15,18 @@ namespace CD
     {
         public AnimClipReference(string guid) : base(guid) { }
     }
+
+    public enum FaceDir
+    {
+        Left,
+        Right,
+        Up,
+        Down
+    }
+
+    public enum HumanState
+    {
+        Idle,
+        Walk
+    }
 }
