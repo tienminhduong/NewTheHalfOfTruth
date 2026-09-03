@@ -5,13 +5,27 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class Player : MonoBehaviour
 {
-
     [SerializeField] private List<CD.AnimClipReference> _animRefs;
     private Animator _animator;
     private HumanAnimSystem _animSystem;
 
     [SerializeField] private float _moveSpeed = 5f;
     private Vector2 _direction;
+
+
+    private InteractableService _interactableService;
+
+    private void SetupInteractable(IService service)
+    {
+        if (service is not InteractableService interactableService)
+        {
+            Debug.LogError($"ServiceLocator returned a service of type {service.GetType()} instead of InteractableService.");
+            return;
+        }
+
+        _interactableService = interactableService;
+        _interactableService.RegisterPlayer(this);
+    }
 
     void OnValidate()
     {
@@ -26,11 +40,14 @@ public class Player : MonoBehaviour
     void OnEnable()
     {
         InputHandler.Move += OnMove;
+        ServiceLocator.TryOrWaitForService<InteractableService>(SetupInteractable);
     }
 
     void OnDisable()
     {
         InputHandler.Move -= OnMove;
+        _interactableService?.UnregisterPlayer(this);
+        ServiceLocator.RemoveServiceCallback<InteractableService>(SetupInteractable);
     }
 
     void Update()
@@ -65,5 +82,6 @@ public class Player : MonoBehaviour
     void OnDestroy()
     {
         _animSystem?.Destroy();
+        _interactableService?.UnregisterPlayer(this);
     }
 }

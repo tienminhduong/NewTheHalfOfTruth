@@ -15,15 +15,15 @@ public class Bootstrapper : MonoBehaviour
     {
         if (loadSceneOnStart && sceneToLoad != null)
         {
-            ServiceLocator.TryGetOrWaitForService<SceneService>(out var sceneService, LoadScene);
+            ServiceLocator.TryOrWaitForService<SceneService>(LoadScene);
         }
     }
 
-    private void LoadScene(SceneService sceneService)
+    private void LoadScene(IService sceneService)
     {
         if (sceneToLoad.RuntimeKeyIsValid())
         {
-            sceneService.TransitionToScene(sceneToLoad);
+            ((SceneService)sceneService).TransitionToScene(sceneToLoad);
         }
         else
         {

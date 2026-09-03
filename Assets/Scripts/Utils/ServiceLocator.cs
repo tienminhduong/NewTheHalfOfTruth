@@ -25,24 +25,33 @@ public static class ServiceLocator
         }
     }
 
-    public static bool TryGetOrWaitForService<T>(out T service, Action<T> callback = null) where T : IService
+    public static void TryOrWaitForService<T>(Action<IService> callback = null) where T : IService
     {
         var type = typeof(T);
         if (services.TryGetValue(type, out var foundService))
         {
-            service = (T)foundService;
-            callback?.Invoke(service);
-            return true;
+            callback?.Invoke(foundService);
         }
         else
         {
-            service = default;
             if (!waitingOnInitCallbacks.ContainsKey(type))
             {
                 waitingOnInitCallbacks[type] = null;
             }
-            waitingOnInitCallbacks[type] += (s) => callback?.Invoke((T)s);
-            return false;
+            waitingOnInitCallbacks[type] += callback;
+        }
+    }
+
+    public static void RemoveServiceCallback<T>(Action<IService> callback) where T : IService
+    {
+        var type = typeof(T);
+        if (waitingOnInitCallbacks.TryGetValue(type, out var existingCallback))
+        {
+            existingCallback -= callback;
+            if (existingCallback == null)
+                waitingOnInitCallbacks.Remove(type);
+            else
+                waitingOnInitCallbacks[type] = existingCallback;
         }
     }
 
