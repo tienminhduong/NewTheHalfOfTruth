@@ -3,18 +3,25 @@ using UnityEngine;
 
 public class InteractableService : MonoBehaviour, IService
 {
-    [SerializeField] private float interactionRange = 2f;
-    [SerializeField] private RectTransform interactionIndicatorCanvas;
+    [SerializeField] private float _interactionRange = 2f;
+    [SerializeField] private RectTransform _interactionIndicatorCanvas;
+
 
     private readonly HashSet<Interactable> _interactables = new();
     private Interactable _currentInteractable;
     private Player _activePlayer;
+    private IShowThoughable _trackingObject;
 
     public void RegisterPlayer(Player player) => _activePlayer = player;
     public void UnregisterPlayer(Player player) => _activePlayer = (_activePlayer == player) ? null : _activePlayer;
 
     public void RegisterInteractable(Interactable interactable) => _interactables.Add(interactable);
     public void UnregisterInteractable(Interactable interactable) => _interactables.Remove(interactable);
+
+    void Start()
+    {
+        _interactionIndicatorCanvas.gameObject.SetActive(false);
+    }
 
     void OnEnable()
     {
@@ -30,6 +37,7 @@ public class InteractableService : MonoBehaviour, IService
     void Update()
     {
         CheckForInteraction();
+        UpdateTrackingObjectPosition();
     }
 
     private void CheckForInteraction()
@@ -45,7 +53,7 @@ public class InteractableService : MonoBehaviour, IService
                 continue;
 
             float distance = Vector2.Distance(_activePlayer.transform.position, interactable.transform.position);
-            if (distance <= interactionRange)
+            if (distance <= _interactionRange)
             {
                 if (closestInteractable == null || distance < lowestDistance)
                 {
@@ -56,15 +64,30 @@ public class InteractableService : MonoBehaviour, IService
         }
         if (closestInteractable != _currentInteractable)
         {
-            interactionIndicatorCanvas.gameObject.SetActive(closestInteractable != null);
+            _interactionIndicatorCanvas.gameObject.SetActive(closestInteractable != null);
             if (closestInteractable != null)
-                interactionIndicatorCanvas.position = closestInteractable.IndicatorPosition;
+            {
+                if (closestInteractable.InteractableType == InteractableType.NPC)
+                    _trackingObject = closestInteractable as IShowThoughable;
+                else
+                    _trackingObject = _activePlayer;
+            }
             _currentInteractable = closestInteractable;
         }
+
+        if (_currentInteractable == null)
+            _trackingObject = null;
+    }
+
+    private void UpdateTrackingObjectPosition()
+    {
+        if (_trackingObject != null)
+            _interactionIndicatorCanvas.position = _trackingObject.ThoughIndicatorPosition;
     }
 
     private void HandleInteraction()
     {
+        Debug.Log("InteractableService: HandleInteraction called.");
         _currentInteractable?.OnInteract();
     }
 

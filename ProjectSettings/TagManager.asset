@@ -47,5 +47,8 @@ TagManager:
   - name: OnFloor
     uniqueID: 2402020903
     locked: 0
+  - name: HUD
+    uniqueID: 1804447803
+    locked: 0
   m_RenderingLayers:
   - Default

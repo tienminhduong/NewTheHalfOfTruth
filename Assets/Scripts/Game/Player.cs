@@ -1,9 +1,10 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityExtensions;
 
 [RequireComponent(typeof(Animator))]
-public class Player : MonoBehaviour
+[RequireComponent(typeof(SpriteRenderer))]
+public class Player : MonoBehaviour, IShowThoughable
 {
     [SerializeField] private List<CD.AnimClipReference> _animRefs;
     private Animator _animator;
@@ -12,6 +13,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float _moveSpeed = 5f;
     private Vector2 _direction;
 
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+
+    public Vector3 ThoughIndicatorPosition => _spriteRenderer.GetTopCenter();
 
     private InteractableService _interactableService;
 
@@ -30,6 +34,7 @@ public class Player : MonoBehaviour
     void OnValidate()
     {
         _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Start()

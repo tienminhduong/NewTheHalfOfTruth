@@ -35,6 +35,7 @@ public class InputHandler : MonoBehaviour, IPlayerActions, IUIActions
         }
 
         _inputActions.Enable();
+        _inputActions.Player.Enable();
         _inputActions.UI.Disable();
     }
 
@@ -70,6 +71,7 @@ public class InputHandler : MonoBehaviour, IPlayerActions, IUIActions
     {
         if (context.performed)
         {
+            Debug.Log("InputHandler: OnInteract called.");
             Interact?.Invoke();
         }
     }
