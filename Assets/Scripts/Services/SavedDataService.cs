@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SavedDataService : MonoBehaviour, IService
+public class SavedDataService : LogicOnlyService
 {
     private PlayerSavedData _playerSavedData;
     private const string PlayerPrefsKey = "PlayerSavedData";
@@ -12,13 +12,13 @@ public class SavedDataService : MonoBehaviour, IService
     public event Action<UnlockedDoorSavedData> OnDoorUnlockedSaved;
 
 
-    public void Awake()
+    public override void Awake()
     {
         LoadFromPref();
         ServiceLocator.RegisterService(this);
     }
 
-    public void OnDestroy()
+    public override void OnDestroy()
     {
         SaveToPref();
         ServiceLocator.UnregisterService(this);
