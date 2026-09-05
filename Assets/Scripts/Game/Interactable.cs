@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityExtensions;
 
 public abstract class Interactable : MonoBehaviour
 {
@@ -7,15 +6,19 @@ public abstract class Interactable : MonoBehaviour
     public abstract InteractableType InteractableType { get; }
 
     private InteractableService _interactableService;
+    private SavedDataService _savedDataService;
+
+    protected SavedDataService SavedDataService => _savedDataService;
 
     public abstract void OnInteract();
 
     protected virtual void OnEnable()
     {
-        ServiceLocator.TryOrWaitForService<InteractableService>(SetupService);
+        ServiceLocator.TryOrWaitForService<InteractableService>(SetupInteractableService);
+        ServiceLocator.TryOrWaitForService<SavedDataService>(SetupSavedService);
     }
 
-    private void SetupService(IService service)
+    private void SetupInteractableService(IService service)
     {
         if (service is not InteractableService interactableService)
         {
@@ -27,10 +30,24 @@ public abstract class Interactable : MonoBehaviour
         _interactableService.RegisterInteractable(this);
     }
 
+    protected virtual void SetupSavedService(IService service)
+    {
+        if (service is not SavedDataService savedDataService)
+        {
+            Debug.LogError($"ServiceLocator returned a service of type {service.GetType()} instead of SavedDataService.");
+            return;
+        }
+
+        _savedDataService = savedDataService;
+    }
+
     protected virtual void OnDisable()
     {
         _interactableService?.UnregisterInteractable(this);
-        ServiceLocator.RemoveServiceCallback<InteractableService>(SetupService);
+        ServiceLocator.RemoveServiceCallback<InteractableService>(SetupInteractableService);
+        ServiceLocator.RemoveServiceCallback<SavedDataService>(SetupSavedService);
+        _savedDataService = null;
+        _interactableService = null;
     }
 }
 

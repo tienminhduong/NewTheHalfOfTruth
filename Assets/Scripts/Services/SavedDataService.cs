@@ -7,6 +7,10 @@ public class SavedDataService : MonoBehaviour, IService
     private PlayerSavedData _playerSavedData;
     private const string PlayerPrefsKey = "PlayerSavedData";
 
+    public event Action<NotebookSavedData> OnEvidenceNoteSaved;
+    public event Action<InteractedNPCSavedData> OnNPCInteractedSaved;
+    public event Action<UnlockedDoorSavedData> OnDoorUnlockedSaved;
+
 
     public void Awake()
     {
@@ -32,6 +36,15 @@ public class SavedDataService : MonoBehaviour, IService
 
         _notebookDataDictionary[evidenceKey] = notebookData;
 
+        for (int i = 0; i < _playerSavedData.notebookData.Count; i++)
+        {
+            if (_playerSavedData.notebookData[i].evidenceKey == evidenceKey)
+            {
+                _playerSavedData.notebookData[i] = notebookData;
+                OnEvidenceNoteSaved?.Invoke(notebookData);
+                return;
+            }
+        }
         _playerSavedData.notebookData.Add(notebookData);
     }
 
@@ -47,6 +60,7 @@ public class SavedDataService : MonoBehaviour, IService
             };
 
             _playerSavedData.interactedNPCs.Add(npcData);
+            OnNPCInteractedSaved?.Invoke(npcData);
         }
     }
 
@@ -61,7 +75,15 @@ public class SavedDataService : MonoBehaviour, IService
         };
 
         _unlockedDoorsDictionary[doorName] = doorData;
-
+        for (int i = 0; i < _playerSavedData.unlockedDoors.Count; i++)
+        {
+            if (_playerSavedData.unlockedDoors[i].doorName == doorName)
+            {
+                _playerSavedData.unlockedDoors[i] = doorData;
+                OnDoorUnlockedSaved?.Invoke(doorData);
+                return;
+            }
+        }
         _playerSavedData.unlockedDoors.Add(doorData);
     }
 

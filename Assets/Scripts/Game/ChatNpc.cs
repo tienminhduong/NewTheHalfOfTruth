@@ -18,5 +18,6 @@ public class ChatNpc : Interactable, IShowThoughable
     public override void OnInteract()
     {
         Debug.Log("Interacted with ChatNpc:  " + gameObject.name);
+        SavedDataService?.SaveInteractedNPC(gameObject.name);
     }
 }

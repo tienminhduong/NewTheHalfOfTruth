@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: EvidenceDatabase
   m_EditorClassIdentifier: Assembly-CSharp::EvidenceDatabase
   evidenceData:
-  - key: 
-    description: 
-    playerGuide: 
-    evidenceSprite: {fileID: 0}
+  - key: StartRoom/Window
+    description: "C\u1EEDa s\u1ED5 \u0111ang m\u1EDF, c\xF3 th\u1EC3 c\xF3 ng\u01B0\u1EDDi
+      \u0111\u1ED9t nh\u1EADp kh\xF4ng"
+    playerGuide: "H\xE3y t\xECm c\u1EA3nh s\xE1t"
+    evidenceSprite: {fileID: -4474943817160580795, guid: b53d8bb06f63aa2438acfb0aca926a03, type: 3}
     playerNote: 
