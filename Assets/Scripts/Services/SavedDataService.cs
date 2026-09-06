@@ -235,6 +235,7 @@ public struct UnlockedDoorSavedData
 
 public enum DoorUnlockedState
 {
+    Locked,
     FirstTimeOpened,
-    AlreadyOpened
+    Opened
 }

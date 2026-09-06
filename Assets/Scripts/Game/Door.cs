@@ -31,12 +31,12 @@ public class Door : MonoBehaviour
 
     private SceneService _sceneService;
 
-    void OnEnable()
+    protected virtual void OnEnable()
     {
         ServiceLocator.TryOrWaitForService<SceneService>(SetupSceneService);
     }
 
-    void OnDisable()
+    protected virtual void OnDisable()
     {
         ServiceLocator.RemoveServiceCallback<SceneService>(SetupSceneService);
     }
