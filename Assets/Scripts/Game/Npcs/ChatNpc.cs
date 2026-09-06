@@ -14,7 +14,7 @@ public class ChatNpc : Interactable, IHuman
     [SerializeField] private List<CD.AnimClipReference> _animRefs;
     [SerializeField] private bool _rotateBackAfterChat = true;
     private Animator _animator;
-    private HumanAnimSystem _animSystem;
+    protected HumanAnimSystem _animSystem;
 
     public override InteractableType InteractableType => InteractableType.NPC;
     public string NpcName => gameObject.name;
