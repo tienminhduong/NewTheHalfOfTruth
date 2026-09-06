@@ -6,13 +6,26 @@ public class BaseUIPanelSystem : MonoBehaviour
     [SerializeField] private Button _closeButton;
     [SerializeField] private GameObject _contentPanel;
 
-    private void OnEnable()
+
+    protected virtual bool ShowPanelOnStart => false;
+    public bool IsPanelOpen => _contentPanel != null && _contentPanel.activeSelf;
+
+    protected virtual void Awake()
+    {
+        if (!ShowPanelOnStart)
+        {
+            _closeButton?.gameObject.SetActive(false);
+            _contentPanel.SetActive(false);
+        }
+    }
+
+    protected virtual void OnEnable()
     {
         if (_closeButton != null)
             _closeButton.onClick.AddListener(ClosePanel);
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         if (_closeButton != null)
             _closeButton.onClick.RemoveListener(ClosePanel);
@@ -25,6 +38,9 @@ public class BaseUIPanelSystem : MonoBehaviour
 
         InputHandler.FocusPlayerInput();
         _contentPanel.SetActive(false);
+        _closeButton?.gameObject.SetActive(false);
+
+        Debug.Log("Panel closed. Player input focus restored.");
     }
 
     protected virtual void OpenPanel()
@@ -34,5 +50,6 @@ public class BaseUIPanelSystem : MonoBehaviour
 
         InputHandler.FocusUIInput();
         _contentPanel.SetActive(true);
+        _closeButton?.gameObject.SetActive(true);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -34,7 +35,7 @@ public class LLMService : LogicOnlyService
                 status = LLMResponse.Status.Success
             };
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Debug.LogError($"LLMService: Error calling LLM API: {ex.Message}");
             return new LLMResponse

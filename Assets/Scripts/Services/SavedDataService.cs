@@ -6,10 +6,11 @@ public class SavedDataService : LogicOnlyService
 {
     private PlayerSavedData _playerSavedData;
     private const string PlayerPrefsKey = "PlayerSavedData";
+    private EvidenceDatabase _evidenceDatabase;
 
-    public event Action<NotebookSavedData> OnEvidenceNoteSaved;
-    public event Action<InteractedNPCSavedData> OnNPCInteractedSaved;
-    public event Action<UnlockedDoorSavedData> OnDoorUnlockedSaved;
+    public static event Action<NotebookSavedData> OnEvidenceNoteSaved;
+    public static event Action<InteractedNPCSavedData> OnNPCInteractedSaved;
+    public static event Action<UnlockedDoorSavedData> OnDoorUnlockedSaved;
 
 
     public override void Awake()
@@ -24,8 +25,27 @@ public class SavedDataService : LogicOnlyService
         ServiceLocator.UnregisterService(this);
     }
 
+    public SavedDataService(EvidenceDatabase database)
+    {
+        _evidenceDatabase = database;
+        _evidenceDatabase.SetSavedDataService(this);
+    }
+
     public void SaveNotebookData(string evidenceKey, string playerNote)
     {
+        if (_evidenceDatabase != null)
+        {
+            if (!_evidenceDatabase.TryGetEvidenceData(evidenceKey, out var evidenceData))
+            {
+                Debug.LogError($"Evidence with key '{evidenceKey}' does not exist in the EvidenceDatabase.");
+                return;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("EvidenceDatabase is not set. Skipping evidence validation.");
+        }
+
         _notebookDataDictionary ??= new Dictionary<string, NotebookSavedData>();
 
         var notebookData = new NotebookSavedData
@@ -45,7 +65,9 @@ public class SavedDataService : LogicOnlyService
                 return;
             }
         }
+
         _playerSavedData.notebookData.Add(notebookData);
+        OnEvidenceNoteSaved?.Invoke(notebookData);
     }
 
     public void SaveInteractedNPC(string npcName)
@@ -84,7 +106,9 @@ public class SavedDataService : LogicOnlyService
                 return;
             }
         }
+
         _playerSavedData.unlockedDoors.Add(doorData);
+        OnDoorUnlockedSaved?.Invoke(doorData);
     }
 
     public void ClearSavedData()
@@ -151,6 +175,7 @@ public class SavedDataService : LogicOnlyService
         {
             Debug.Log("[SavedDataService] No saved data found in PlayerPrefs. Initializing with default values.");
             _playerSavedData = new PlayerSavedData();
+            _playerSavedData.EnsureNonNullLists();
         }
     }
 
@@ -160,6 +185,17 @@ public class SavedDataService : LogicOnlyService
         PlayerPrefs.SetString(PlayerPrefsKey, savedDataJson);
         PlayerPrefs.Save();
     }
+
+    public IEnumerable<string> GetEvidenceKeys()
+    {
+        if (_notebookDataDictionary != null)
+        {
+            foreach (var kvp in _notebookDataDictionary)
+            {
+                yield return kvp.Key;
+            }
+        }
+    }
 }
 
 [Serializable]
@@ -168,6 +204,13 @@ public struct PlayerSavedData
     public List<NotebookSavedData> notebookData;
     public List<InteractedNPCSavedData> interactedNPCs;
     public List<UnlockedDoorSavedData> unlockedDoors;
+
+    public void EnsureNonNullLists()
+    {
+        notebookData ??= new List<NotebookSavedData>();
+        interactedNPCs ??= new List<InteractedNPCSavedData>();
+        unlockedDoors ??= new List<UnlockedDoorSavedData>();
+    }
 }
 
 [Serializable]

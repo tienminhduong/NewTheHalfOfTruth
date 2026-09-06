@@ -7,20 +7,24 @@ public class Evidence : Interactable
     override protected void OnEnable()
     {
         base.OnEnable();
-        ServiceLocator.TryOrWaitForService<SavedDataService>(SetupSavedService);
     }
 
     override protected void OnDisable()
     {
         base.OnDisable();
-        ServiceLocator.RemoveServiceCallback<SavedDataService>(SetupSavedService);
     }
 
     public override void OnInteract()
     {
         IsInteractable = false;
         if (SavedDataService != null)
+        {
             SavedDataService.SaveNotebookData(gameObject.name, "");
+        }
+        else
+        {
+            Debug.LogError("SavedDataService is not available. Cannot save notebook data.");
+        }
     }
 
     protected override void SetupSavedService(IService service)
