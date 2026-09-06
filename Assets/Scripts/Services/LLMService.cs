@@ -28,6 +28,7 @@ public class LLMService : LogicOnlyService
         string jsonData = JsonUtility.ToJson(requestData);
         try
         {
+            Debug.Log($"LLMService: Sending request to LLM API with data: {jsonData}");
             string response = await PostRequestAsync(BASE_URL, jsonData);
             return new LLMResponse
             {
