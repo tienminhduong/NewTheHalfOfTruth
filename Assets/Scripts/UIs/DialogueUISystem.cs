@@ -18,6 +18,7 @@ public class DialogueUISystem : BaseUIPanelSystem
 
     private LLMService _llmService;
     private ChatNpc _currentChatNpc;
+    private bool _isWaitingForLLMResponse = false;
 
     private static event Action<string, bool> OnShowDialogue;
     private static event Action<ChatNpc> OnShowChatNpcDialogue;
@@ -41,6 +42,7 @@ public class DialogueUISystem : BaseUIPanelSystem
 
         submitButton.AddListener(HandleSubmitButtonClick);
         cancelButton.AddListener(ClosePanel);
+        inputField.onSubmit.AddListener(HandleSubmitButtonClick);
 
         ServiceLocator.TryOrWaitForService<LLMService>(SetupLLMService);
     }
@@ -55,6 +57,7 @@ public class DialogueUISystem : BaseUIPanelSystem
 
         submitButton.RemoveListener(HandleSubmitButtonClick);
         cancelButton.RemoveListener(ClosePanel);
+        inputField.onSubmit.RemoveListener(HandleSubmitButtonClick);
 
         ServiceLocator.RemoveServiceCallback<LLMService>(SetupLLMService);
     }
@@ -83,6 +86,8 @@ public class DialogueUISystem : BaseUIPanelSystem
 
     protected override void ClosePanel()
     {
+        if (_isWaitingForLLMResponse)
+            return;
         if (dialogueText.IsTyping)
         {
             dialogueText.EndCurrentDialogue();
@@ -96,9 +101,14 @@ public class DialogueUISystem : BaseUIPanelSystem
         }
     }
 
-    protected void HandleSubmitButtonClick()
+    private void HandleSubmitButtonClick()
     {
         string playerInput = inputField.text;
+        HandleSubmitButtonClick(playerInput);
+    }
+
+    private void HandleSubmitButtonClick(string playerInput)
+    {
         if (string.IsNullOrWhiteSpace(playerInput))
         {
             return;
@@ -108,6 +118,7 @@ public class DialogueUISystem : BaseUIPanelSystem
         {
             _llmService.CallLLMAsync(_currentChatNpc.NpcName, _currentChatNpc.NpcSystem, playerInput)
                 .ContinueWith(HandleLLMResponse).Forget();
+            LockClosePanel(true);
             submitButton.SetInteractable(false);
         }
         else
@@ -144,5 +155,13 @@ public class DialogueUISystem : BaseUIPanelSystem
         }
         else
             Debug.LogError($"LLMService failed to generate a response: {response.response}");
+        LockClosePanel(false);
+    }
+
+    private void LockClosePanel(bool lockPanel)
+    {
+        _isWaitingForLLMResponse = lockPanel;
+        cancelButton.SetInteractable(!lockPanel);
+
     }
 }

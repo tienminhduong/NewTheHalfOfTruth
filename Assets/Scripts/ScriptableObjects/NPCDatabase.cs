@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "NPCDatabase", menuName = "Scriptable Objects/NPCDatabase")]
 public class NPCDatabase : ScriptableObject
 {
     [SerializeField] private NPCData[] _npcs;

@@ -9,16 +9,19 @@ public class InputHandler : MonoBehaviour, IPlayerActions, IUIActions
     public static event Action<Vector2> Move;
     public static event Action Interact;
 
-    private static event Action<bool> _focusUIEvent;
+    /// <summary>
+    /// bool parameter indicates whether the focus is on UI (true) or Player (false).
+    /// </summary>
+    public static event Action<bool> OnInputFocusChange;
 
     public static void FocusUIInput()
     {
-        _focusUIEvent?.Invoke(true);
+        OnInputFocusChange?.Invoke(true);
     }
 
     public static void FocusPlayerInput()
     {
-        _focusUIEvent?.Invoke(false);
+        OnInputFocusChange?.Invoke(false);
     }
 
 
@@ -42,13 +45,13 @@ public class InputHandler : MonoBehaviour, IPlayerActions, IUIActions
     void OnEnable()
     {
         EnablePlayerActions();
-        _focusUIEvent += FocusUI;
+        OnInputFocusChange += FocusUI;
     }
 
     void OnDisable()
     {
         _inputActions.Disable();
-        _focusUIEvent -= FocusUI;
+        OnInputFocusChange -= FocusUI;
     }
 
     void FocusUI(bool isUIFocused)

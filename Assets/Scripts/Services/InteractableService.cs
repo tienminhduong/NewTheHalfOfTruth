@@ -11,6 +11,7 @@ public class InteractableService : MonoBehaviour, IService
     private Interactable _currentInteractable;
     private Player _activePlayer;
     private IShowThoughable _trackingObject;
+    private bool _updateLogic = true;
 
     public void RegisterPlayer(Player player) => _activePlayer = player;
     public void UnregisterPlayer(Player player) => _activePlayer = (_activePlayer == player) ? null : _activePlayer;
@@ -26,18 +27,27 @@ public class InteractableService : MonoBehaviour, IService
     void OnEnable()
     {
         InputHandler.Interact += HandleInteraction;
+        InputHandler.OnInputFocusChange += HandleFocusUIChange;
     }
 
     void OnDisable()
     {
         InputHandler.Interact -= HandleInteraction;
+        InputHandler.OnInputFocusChange -= HandleFocusUIChange;
     }
 
 
     void Update()
     {
+        if (!_updateLogic)
+            return;
         CheckForInteraction();
         UpdateTrackingObjectPosition();
+    }
+
+    private void HandleFocusUIChange(bool isUIFocused)
+    {
+        _updateLogic = !isUIFocused;
     }
 
     private void CheckForInteraction()
@@ -89,6 +99,9 @@ public class InteractableService : MonoBehaviour, IService
     {
         Debug.Log("InteractableService: HandleInteraction called.");
         _currentInteractable?.OnInteract();
+        _currentInteractable = null;
+        _trackingObject = null;
+        _interactionIndicatorCanvas.gameObject.SetActive(false);
     }
 
     public void Awake()
