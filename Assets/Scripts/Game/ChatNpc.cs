@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using CD;
 using UnityEngine;
 using UnityExtensions;
 
@@ -10,9 +9,10 @@ public class ChatNpc : Interactable, IHuman
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private NPCDatabase _npcDatabase;
 
-    [SerializeField] private FaceDir _initialFacingDirection = FaceDir.Right;
+    [SerializeField] private CD.FaceDir _initialFacingDirection = CD.FaceDir.Right;
 
-    [SerializeField] private List<AnimClipReference> _animRefs;
+    [SerializeField] private List<CD.AnimClipReference> _animRefs;
+    [SerializeField] private bool _rotateBackAfterChat = true;
     private Animator _animator;
     private HumanAnimSystem _animSystem;
 
@@ -66,12 +66,15 @@ public class ChatNpc : Interactable, IHuman
 
     public virtual void OnChatEnd()
     {
-
+        if (_rotateBackAfterChat)
+        {
+            _animSystem.PlayAnimation(_initialFacingDirection, CD.HumanState.Idle);
+        }
     }
 
-    public void RotateTo(FaceDir direction)
+    public void RotateTo(CD.FaceDir direction)
     {
-        _animSystem.PlayAnimation(direction, HumanState.Idle);
+        _animSystem.PlayAnimation(direction, CD.HumanState.Idle);
     }
 
     void OnDestroy()

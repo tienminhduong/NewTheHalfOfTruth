@@ -19,6 +19,9 @@ public class Player : MonoBehaviour, IHuman
     public Vector3 ThoughIndicatorPosition => _spriteRenderer.GetTopCenter();
 
     private InteractableService _interactableService;
+    private SceneService _sceneService;
+    private CD.FaceDir _faceDirOnLoad = CD.FaceDir.Down;
+    private string _startPointKeyOnLoad;
 
     private void SetupInteractable(IService service)
     {
@@ -32,6 +35,24 @@ public class Player : MonoBehaviour, IHuman
         _interactableService.RegisterPlayer(this);
     }
 
+    private void SetupSceneService(IService service)
+    {
+        if (service is not SceneService sceneService)
+        {
+            Debug.LogError($"ServiceLocator returned a service of type {service.GetType()} instead of SceneService.");
+            return;
+        }
+
+        _sceneService = sceneService;
+        _startPointKeyOnLoad = null;
+        if (_sceneService == null || !_sceneService.HasLoadData)
+            return;
+
+        _faceDirOnLoad = _sceneService.CurrentLoadSceneData.PlayerFacingDirection;
+        _startPointKeyOnLoad = _sceneService.CurrentLoadSceneData.StartPointKey;
+        ObjectIdentifier.TryOrWaitFor(_startPointKeyOnLoad, SetPositionToTeleportPoint);
+    }
+
     void OnValidate()
     {
         _animator = GetComponent<Animator>();
@@ -40,13 +61,14 @@ public class Player : MonoBehaviour, IHuman
 
     void Start()
     {
-        _animSystem = new HumanAnimSystem(_animator, _animRefs);
+        _animSystem = new HumanAnimSystem(_animator, _animRefs, _faceDirOnLoad);
     }
 
     void OnEnable()
     {
         InputHandler.Move += OnMove;
         ServiceLocator.TryOrWaitForService<InteractableService>(SetupInteractable);
+        ServiceLocator.TryOrWaitForService<SceneService>(SetupSceneService);
     }
 
     void OnDisable()
@@ -54,6 +76,10 @@ public class Player : MonoBehaviour, IHuman
         InputHandler.Move -= OnMove;
         _interactableService?.UnregisterPlayer(this);
         ServiceLocator.RemoveServiceCallback<InteractableService>(SetupInteractable);
+        ServiceLocator.RemoveServiceCallback<SceneService>(SetupSceneService);
+
+        if (_startPointKeyOnLoad != null)
+            ObjectIdentifier.RemovePendingCallback(_startPointKeyOnLoad, SetPositionToTeleportPoint);
     }
 
     void Update()
@@ -94,5 +120,10 @@ public class Player : MonoBehaviour, IHuman
     public void RotateTo(FaceDir direction)
     {
         _animSystem.PlayAnimation(direction, HumanState.Idle);
+    }
+
+    private void SetPositionToTeleportPoint(IIdentifiable teleportPoint)
+    {
+        transform.position = teleportPoint.gameObject.transform.position;
     }
 }

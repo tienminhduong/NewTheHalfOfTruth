@@ -20,6 +20,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 636203b5f4b672c489f478e82258bdb6
+    m_Address: Assets/Scenes/StartRoad.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7aef4041e99641e40bbe0cbbbb31dbc4
     m_Address: Assets/Scenes/StartRoom.unity
     m_ReadOnly: 0

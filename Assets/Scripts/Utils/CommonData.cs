@@ -8,6 +8,8 @@ namespace CD
     public struct LoadSceneData
     {
         public AssetReference SceneToLoad;
+        public FaceDir PlayerFacingDirection;
+        public string StartPointKey;
     }
 
     [Serializable]

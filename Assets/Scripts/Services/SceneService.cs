@@ -48,11 +48,13 @@ public class SceneService : MonoBehaviour, IService
     {
         await sceneTransitionImage.DOFade(1, fadeDuration).AsyncWaitForCompletion();
         sceneTransitionImage.raycastTarget = true;
+        InputHandler.FocusUIInput();
 
         var loadOperation = Addressables.LoadSceneAsync(sceneAddress);
         activeSceneInstance = await loadOperation.Task;
 
         await sceneTransitionImage.DOFade(0, fadeDuration).AsyncWaitForCompletion();
         sceneTransitionImage.raycastTarget = false;
+        InputHandler.FocusPlayerInput();
     }
 }
