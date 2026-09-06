@@ -7,6 +7,7 @@ public class SavedDataService : LogicOnlyService
     private PlayerSavedData _playerSavedData;
     private const string PlayerPrefsKey = "PlayerSavedData";
     private EvidenceDatabase _evidenceDatabase;
+    private bool _loadFromPrefs;
 
     public static event Action<NotebookSavedData> OnEvidenceNoteSaved;
     public static event Action<InteractedNPCSavedData> OnNPCInteractedSaved;
@@ -25,10 +26,11 @@ public class SavedDataService : LogicOnlyService
         ServiceLocator.UnregisterService(this);
     }
 
-    public SavedDataService(EvidenceDatabase database)
+    public SavedDataService(EvidenceDatabase database, bool loadFromPrefs = true)
     {
         _evidenceDatabase = database;
         _evidenceDatabase.SetSavedDataService(this);
+        _loadFromPrefs = loadFromPrefs;
     }
 
     public void SaveNotebookData(string evidenceKey, string playerNote)
@@ -148,7 +150,7 @@ public class SavedDataService : LogicOnlyService
 
     private void LoadFromPref()
     {
-        string savedDataJson = PlayerPrefs.GetString(PlayerPrefsKey, string.Empty);
+        string savedDataJson = _loadFromPrefs ? PlayerPrefs.GetString(PlayerPrefsKey, string.Empty) : string.Empty;
         if (!string.IsNullOrEmpty(savedDataJson))
         {
             _playerSavedData = JsonUtility.FromJson<PlayerSavedData>(savedDataJson);
@@ -181,6 +183,9 @@ public class SavedDataService : LogicOnlyService
 
     private void SaveToPref()
     {
+        if (!_loadFromPrefs)
+            return;
+
         string savedDataJson = JsonUtility.ToJson(_playerSavedData);
         PlayerPrefs.SetString(PlayerPrefsKey, savedDataJson);
         PlayerPrefs.Save();

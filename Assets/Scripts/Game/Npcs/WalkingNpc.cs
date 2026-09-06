@@ -43,6 +43,6 @@ public class WalkingNpc : MonoBehaviour
 
     void OnDestroy()
     {
-        animationSystem.Destroy();
+        animationSystem?.Destroy();
     }
 }

@@ -63,7 +63,8 @@ public class LLMService : LogicOnlyService
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            return request.downloadHandler.text;
+            var apiResponse = JsonUtility.FromJson<LlmApiResponse>(request.downloadHandler.text);
+            return apiResponse.answer;
         }
         else
         {
@@ -89,4 +90,10 @@ public struct LLMResponse
         Success,
         Error
     }
+}
+
+public struct LlmApiResponse
+{
+    public string answer;
+    public bool weakPointHit;
 }

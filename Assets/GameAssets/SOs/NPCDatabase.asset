@@ -16,3 +16,18 @@ MonoBehaviour:
   - npcName: James
     npcSystem: "C\u1EA3nh s\xE1t c\u1ED1 ch\u1EA5p"
     startUpDialogue: "Ch\xE0o \xF4ng!"
+  - npcName: Michael
+    npcSystem: "C\u1EA3nh s\xE1t c\u1ED1 ch\u1EA5p"
+    startUpDialogue: "Ch\xE0o \xF4ng!"
+  - npcName: Wills
+    npcSystem: "Ng\u01B0\u1EDDi \u0111\xE0n \xF4ng tr\u1EA7m t\xEDnh"
+    startUpDialogue: "Ch\xE0o th\xE1m t\u1EED!"
+  - npcName: Daniel
+    npcSystem: "Ng\u01B0\u1EDDi qua \u0111\u01B0\u1EDDng"
+    startUpDialogue: "\u1ED2 ch\xE0o \xF4ng"
+  - npcName: Thomas
+    npcSystem: "Ng\u01B0\u1EDDi qua \u0111\u01B0\u1EDDng"
+    startUpDialogue: ...
+  - npcName: Brad
+    npcSystem: "Ng\u01B0\u1EDDi nhi\u1EC7t t\xECnh"
+    startUpDialogue: ...

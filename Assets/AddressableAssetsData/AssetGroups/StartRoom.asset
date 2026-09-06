@@ -20,6 +20,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 134a2199abdab0f4a9d4e55e99490af9
+    m_Address: Assets/GameAssets/Animations/Michael/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1bd696951df7f6d45ae1a039f5ab6fef
+    m_Address: Assets/GameAssets/Animations/Michael/WalkLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21c5bc7231b9b764a8897def5cef4431
+    m_Address: Assets/GameAssets/Animations/Michael/IdleDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3068133612ede8640ba3ab5ff98103db
     m_Address: Assets/GameAssets/Animations/James/WalkDown.anim
     m_ReadOnly: 0
@@ -32,6 +47,21 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 512833c2d1ce5f7448cd28ed04280ace
     m_Address: Assets/GameAssets/Animations/James/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7ba909e2030654949ac4f9f66ae4b13c
+    m_Address: Assets/GameAssets/Animations/Michael/IdleRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7fbec592e6a330b469e90a8329847620
+    m_Address: Assets/GameAssets/Animations/Michael/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 85fd2b71ade533049a903753c03cb9f9
+    m_Address: Assets/GameAssets/Animations/Michael/IdleLeft.anim
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -52,6 +82,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d9a5e4ea2cca82b4ab9a011e3d77a60e
     m_Address: Assets/GameAssets/Animations/James/IdleLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dad8ae878c46a0d4cbbda6fc0db57358
+    m_Address: Assets/GameAssets/Animations/Michael/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f11d76814f587384680406203280a963
+    m_Address: Assets/GameAssets/Animations/Michael/WalkRight.anim
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

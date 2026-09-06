@@ -4,13 +4,14 @@ using UnityEngine;
 public class DependencyInitializer : Singleton<DependencyInitializer>
 {
     [SerializeField] private EvidenceDatabase _evidenceDatabase;
+    [SerializeField] private bool _loadFromPrefs = true;
     private readonly List<LogicOnlyService> _logicOnlyServices = new();
 
     protected override void Awake()
     {
         base.Awake();
 
-        _logicOnlyServices.Add(new SavedDataService(_evidenceDatabase));
+        _logicOnlyServices.Add(new SavedDataService(_evidenceDatabase, _loadFromPrefs));
         _logicOnlyServices.Add(new LLMService());
 
         foreach (var service in _logicOnlyServices)

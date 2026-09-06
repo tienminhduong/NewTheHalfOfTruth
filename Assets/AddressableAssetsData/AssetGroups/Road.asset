@@ -1,0 +1,263 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Road
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Road
+  m_GUID: abed816f43a95f742aae6d253962a929
+  m_SerializeEntries:
+  - m_GUID: 0054552523ca93b4c8c32116db530983
+    m_Address: Assets/GameAssets/Animations/NPC6/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0567c7a1e2f180c47a7afe5ec4d09ea0
+    m_Address: Assets/GameAssets/Animations/Brad/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 097401ba0c319074f8c0bdeec7af9db4
+    m_Address: Assets/GameAssets/Animations/Daniel/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0cd51c0c005da5a4e8941ac2bfc5b61b
+    m_Address: Assets/GameAssets/Animations/NPC3/WalkLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 152bd339e4a2c414b888b8074b107aa2
+    m_Address: Assets/GameAssets/Animations/NPC3/IdleRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 16f9d44f2964fea4eb500342f0136d56
+    m_Address: Assets/GameAssets/Animations/NPC7/IdleDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1bb733a5aec72af47b85a99a59250f3f
+    m_Address: Assets/GameAssets/Animations/NPC6/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1fbca1b3876f2354684be5587c59cee1
+    m_Address: Assets/GameAssets/Animations/Thomas/WalkLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 23242addf6f576f48baf3d33842819c3
+    m_Address: Assets/GameAssets/Animations/Brad/IdleDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2376c5738a08d594093e5709fa2bf104
+    m_Address: Assets/GameAssets/Animations/NPC7/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 240a988f1fecf864fbf425a47c421176
+    m_Address: Assets/GameAssets/Animations/NPC7/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 26ebbeaf7976f494a8c678d5dcc706e4
+    m_Address: Assets/GameAssets/Animations/Thomas/IdleRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2a167fe0ab8e2ad4b90acf9e52198dd9
+    m_Address: Assets/GameAssets/Animations/Brad/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2c367e7e280ef6543a24282e413d4392
+    m_Address: Assets/GameAssets/Animations/NPC7/WalkRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 423242aa6a7278d4bba4e78bf87eb052
+    m_Address: Assets/GameAssets/Animations/Brad/IdleLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5ce175c6ea548614e87d83be95d20fdb
+    m_Address: Assets/GameAssets/Animations/Thomas/IdleLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6174b224eecd81b49b42be96d5d504b2
+    m_Address: Assets/GameAssets/Animations/Daniel/IdleDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 681a64d5a22565942b39b897eff9592b
+    m_Address: Assets/GameAssets/Animations/NPC7/IdleRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 683896388acd6a64ea6e7bef9990363f
+    m_Address: Assets/GameAssets/Animations/NPC7/WalkLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6c93096617636bd40ab37742ceaba3bb
+    m_Address: Assets/GameAssets/Animations/Thomas/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 75432a426e34e7b4b839063e3002fe2a
+    m_Address: Assets/GameAssets/Animations/Daniel/WalkLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 78c3155668b3d2245a26ae88c7ebcc05
+    m_Address: Assets/GameAssets/Animations/NPC7/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 830c01f85c567734ba135ebb208979b5
+    m_Address: Assets/GameAssets/Animations/NPC3/IdleDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 88cd3fb4481cd8d42900ebb951705067
+    m_Address: Assets/GameAssets/Animations/NPC6/WalkLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8f24bdcbe07d24540921e75c8266b3bb
+    m_Address: Assets/GameAssets/Animations/Daniel/IdleLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 947479c8831f4d3439a6571d04ed1335
+    m_Address: Assets/GameAssets/Animations/Thomas/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 95570d020a841f04db92def1f01032bf
+    m_Address: Assets/GameAssets/Animations/Thomas/IdleDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9bdfed3baf67cbd4d88327bdf2eb6305
+    m_Address: Assets/GameAssets/Animations/NPC3/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a2d2858d1d3a994458eabb9b41170e58
+    m_Address: Assets/GameAssets/Animations/Brad/WalkRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a34261ea0de667b42b4a37ffdff11b7d
+    m_Address: Assets/GameAssets/Animations/Daniel/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a4573a0f5333e1a4b961756f63d98f0a
+    m_Address: Assets/GameAssets/Animations/Daniel/WalkRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a81b0ddc0a63c634bb5007c2c71da2cb
+    m_Address: Assets/GameAssets/Animations/Brad/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae42f698d7c221d4e8490712fee8a2a2
+    m_Address: Assets/GameAssets/Animations/NPC6/IdleRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c1fcaa41c32d21e4e82df7bddc3cf44c
+    m_Address: Assets/GameAssets/Animations/NPC3/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c2d1295a5ea19814d91ba847b84f68ab
+    m_Address: Assets/GameAssets/Animations/Thomas/WalkRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c4a4814dcfb39ea4986acfd7bc1aa147
+    m_Address: Assets/GameAssets/Animations/NPC6/IdleDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ca80b87cdac1ae54e9fc41fc946b26f4
+    m_Address: Assets/GameAssets/Animations/NPC3/WalkRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d199fc532e13e85459fc2b67c6271614
+    m_Address: Assets/GameAssets/Animations/NPC3/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d54124da060d26f49b381ba3c529264b
+    m_Address: Assets/GameAssets/Animations/NPC7/IdleLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d6d4898cef089244dbb59c36273e484e
+    m_Address: Assets/GameAssets/Animations/Thomas/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7b2121c3f0f35b44ad2b7bf4f28e054
+    m_Address: Assets/GameAssets/Animations/Brad/WalkLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: daa9f6b476293ae46b18deaff37f9ea4
+    m_Address: Assets/GameAssets/Animations/Daniel/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e08f8562e198e234696bea0fe22c2b34
+    m_Address: Assets/GameAssets/Animations/NPC6/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9c37114858fd5e45afb5f912c7dfd92
+    m_Address: Assets/GameAssets/Animations/Daniel/IdleRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: efeca810b551e19448f9241aad322ed6
+    m_Address: Assets/GameAssets/Animations/NPC3/IdleLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f19f098da50fee743930fdaefcb9e7a8
+    m_Address: Assets/GameAssets/Animations/NPC6/WalkRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f9c12af0d2b51c24faca1f5cbc78c86a
+    m_Address: Assets/GameAssets/Animations/Brad/IdleRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ff05360ea37c7ca4da8400db08baaeed
+    m_Address: Assets/GameAssets/Animations/NPC6/IdleLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3d575db7c147364438764608736a8e2d, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: fe9a1250c3c967b49bd5ef6caf700d74, type: 2}
+    - {fileID: 11400000, guid: 0421115ba1b82e1469ef0e8415b7e9c2, type: 2}

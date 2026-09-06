@@ -56,7 +56,11 @@ public static class ObjectIdentifier
         if (TryGetObjectById(id, out var obj))
             callback?.Invoke(obj);
         else
+        {
+            if (!_pendingCallbacks.ContainsKey(id))
+                _pendingCallbacks[id] = null;
             _pendingCallbacks[id] += callback;
+        }
     }
 
     public static void RemovePendingCallback(string id, Action<IIdentifiable> callback)
