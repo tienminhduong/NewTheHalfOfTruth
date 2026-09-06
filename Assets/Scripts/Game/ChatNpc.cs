@@ -1,11 +1,20 @@
+using System.Collections.Generic;
+using CD;
 using UnityEngine;
 using UnityExtensions;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class ChatNpc : Interactable, IShowThoughable
+[RequireComponent(typeof(Animator))]
+public class ChatNpc : Interactable, IHuman
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private NPCDatabase _npcDatabase;
+
+    [SerializeField] private FaceDir _initialFacingDirection = FaceDir.Right;
+
+    [SerializeField] private List<AnimClipReference> _animRefs;
+    private Animator _animator;
+    private HumanAnimSystem _animSystem;
 
     public override InteractableType InteractableType => InteractableType.NPC;
     public string NpcName => gameObject.name;
@@ -32,11 +41,20 @@ public class ChatNpc : Interactable, IShowThoughable
         {
             Debug.LogError("NPCDatabase is not assigned in the inspector.");
         }
+
+        if (_animator == null)
+            _animator = GetComponent<Animator>();
+    }
+
+    void Start()
+    {
+        _animSystem = new HumanAnimSystem(_animator, _animRefs, _initialFacingDirection);
     }
 
     void OnValidate()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
     }
 
     public override void OnInteract()
@@ -49,5 +67,15 @@ public class ChatNpc : Interactable, IShowThoughable
     public virtual void OnChatEnd()
     {
 
+    }
+
+    public void RotateTo(FaceDir direction)
+    {
+        _animSystem.PlayAnimation(direction, HumanState.Idle);
+    }
+
+    void OnDestroy()
+    {
+        _animSystem?.Destroy();
     }
 }

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using CD;
 using UnityEngine;
+using UnityExtensions;
 
 public class InteractableService : MonoBehaviour, IService
 {
@@ -10,7 +12,7 @@ public class InteractableService : MonoBehaviour, IService
     private readonly HashSet<Interactable> _interactables = new();
     private Interactable _currentInteractable;
     private Player _activePlayer;
-    private IShowThoughable _trackingObject;
+    private IHuman _trackingObject;
     private bool _updateLogic = true;
 
     public void RegisterPlayer(Player player) => _activePlayer = player;
@@ -78,7 +80,7 @@ public class InteractableService : MonoBehaviour, IService
             if (closestInteractable != null)
             {
                 if (closestInteractable.InteractableType == InteractableType.NPC)
-                    _trackingObject = closestInteractable as IShowThoughable;
+                    _trackingObject = closestInteractable as IHuman;
                 else
                     _trackingObject = _activePlayer;
             }
@@ -97,7 +99,55 @@ public class InteractableService : MonoBehaviour, IService
 
     private void HandleInteraction()
     {
-        Debug.Log("InteractableService: HandleInteraction called.");
+        if (_currentInteractable == null)
+            return;
+
+        if (!_currentInteractable.IsInteractable)
+            return;
+
+        if (_activePlayer != null)
+        {
+            Vector3 directionToInteractable = _currentInteractable.transform.position - _activePlayer.transform.position;
+            if (directionToInteractable != Vector3.zero)
+            {
+                FaceDir faceDir;
+                if (Mathf.Abs(directionToInteractable.x) > Mathf.Abs(directionToInteractable.y))
+                    faceDir = directionToInteractable.x > 0 ? FaceDir.Right : FaceDir.Left;
+                else
+                    faceDir = directionToInteractable.y > 0 ? FaceDir.Up : FaceDir.Down;
+
+                _activePlayer.RotateTo(faceDir);
+
+                if (_currentInteractable is IHuman human)
+                {
+                    human.RotateTo(faceDir.Reverse());
+                }
+            }
+        }
+
+        // if (_currentInteractable is IHuman human)
+        // {
+        //     if (_activePlayer == null)
+        //     {
+        //         Debug.LogWarning("No active player registered to handle interaction.");
+        //         return;
+        //     }
+
+        //     // Rotate the player to face the NPC before interaction
+        //     Vector3 directionToNPC = human.transform.position - _activePlayer.transform.position;
+        //     if (directionToNPC != Vector3.zero)
+        //     {
+        //         FaceDir faceDir;
+        //         if (Mathf.Abs(directionToNPC.x) > Mathf.Abs(directionToNPC.y))
+        //             faceDir = directionToNPC.x > 0 ? FaceDir.Right : FaceDir.Left;
+        //         else
+        //             faceDir = directionToNPC.y > 0 ? FaceDir.Up : FaceDir.Down;
+
+        //         _activePlayer.RotateTo(faceDir);
+        //         human.RotateTo(faceDir.Reverse());
+        //     }
+        // }
+
         _currentInteractable?.OnInteract();
         _currentInteractable = null;
         _trackingObject = null;

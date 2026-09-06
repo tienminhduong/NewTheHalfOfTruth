@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using CD;
 using UnityEngine;
 using UnityExtensions;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
-public class Player : MonoBehaviour, IShowThoughable
+public class Player : MonoBehaviour, IHuman
 {
-    [SerializeField] private List<CD.AnimClipReference> _animRefs;
+    [SerializeField] private List<AnimClipReference> _animRefs;
     private Animator _animator;
     private HumanAnimSystem _animSystem;
 
@@ -88,5 +89,10 @@ public class Player : MonoBehaviour, IShowThoughable
     {
         _animSystem?.Destroy();
         _interactableService?.UnregisterPlayer(this);
+    }
+
+    public void RotateTo(FaceDir direction)
+    {
+        _animSystem.PlayAnimation(direction, HumanState.Idle);
     }
 }

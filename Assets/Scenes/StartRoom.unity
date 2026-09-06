@@ -2497,6 +2497,7 @@ GameObject:
   - component: {fileID: 1241490255}
   - component: {fileID: 1241490256}
   - component: {fileID: 1241490257}
+  - component: {fileID: 1241490258}
   m_Layer: 0
   m_Name: James
   m_TagString: Untagged
@@ -2592,6 +2593,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChatNpc
   _spriteRenderer: {fileID: 1241490256}
   _npcDatabase: {fileID: 11400000, guid: 9f573fef125033741bfabdc9ca60f281, type: 2}
+  _initialFacingDirection: 1
+  _animRefs:
+  - m_AssetGUID: 4d18a1444127afc47a3f0ee09847708b
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 1
+  - m_AssetGUID: d9a5e4ea2cca82b4ab9a011e3d77a60e
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 1
+  - m_AssetGUID: 9f6dcd733f4ae6b4aae0bfa44b087241
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 1
+  - m_AssetGUID: 9b71fa150627aed48b29f844530bf006
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 1
+--- !u!95 &1241490258
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241490254}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1398011824
 GameObject:
   m_ObjectHideFlags: 0
@@ -2735,6 +2780,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2f33efa17342914d8adb5a2d8e3c1f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Evidence
+  _evidenceDatabase: {fileID: 11400000, guid: ddaee6ecb05ce2c4b85ad78f22e436df, type: 2}
 --- !u!212 &1549726947
 SpriteRenderer:
   serializedVersion: 2
