@@ -1179,7 +1179,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &129129148
 Transform:
   m_ObjectHideFlags: 0
@@ -1539,7 +1539,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &711250876
 Transform:
   m_ObjectHideFlags: 0
@@ -2849,8 +2849,8 @@ Tilemap:
   - first: {x: 6, y: -2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 2
+      m_TileSpriteIndex: 2
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2859,8 +2859,8 @@ Tilemap:
   - first: {x: 7, y: -2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 2
+      m_TileSpriteIndex: 2
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2869,8 +2869,8 @@ Tilemap:
   - first: {x: 8, y: -2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 2
+      m_TileSpriteIndex: 2
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2879,8 +2879,8 @@ Tilemap:
   - first: {x: 9, y: -2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 2
+      m_TileSpriteIndex: 2
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2889,8 +2889,8 @@ Tilemap:
   - first: {x: 10, y: -2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 2
+      m_TileSpriteIndex: 2
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -4438,11 +4438,11 @@ Tilemap:
       m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 6
+  - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: e5637ed886120b243ba6393aaa4ba4cb, type: 2}
   - m_RefCount: 22
     m_Data: {fileID: 11400000, guid: 539ace374f8f8234d8ba721c2eefe546, type: 2}
-  - m_RefCount: 16
+  - m_RefCount: 21
     m_Data: {fileID: 11400000, guid: 95839d6850a490e43bd5c22658793418, type: 2}
   - m_RefCount: 22
     m_Data: {fileID: 11400000, guid: 774f4ba8f38a54a459062e3eed0492ff, type: 2}
@@ -4451,11 +4451,11 @@ Tilemap:
   - m_RefCount: 44
     m_Data: {fileID: 11400000, guid: 0679d63add65b0442bbf7aeaa2a0fc65, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 6
+  - m_RefCount: 1
     m_Data: {fileID: -2017398761, guid: 78db6528a2bdffd44b8ba0b74ee5a286, type: 3}
   - m_RefCount: 22
     m_Data: {fileID: 1076773154, guid: 78db6528a2bdffd44b8ba0b74ee5a286, type: 3}
-  - m_RefCount: 16
+  - m_RefCount: 21
     m_Data: {fileID: 665661010, guid: 78db6528a2bdffd44b8ba0b74ee5a286, type: 3}
   - m_RefCount: 22
     m_Data: {fileID: 2128034377, guid: 78db6528a2bdffd44b8ba0b74ee5a286, type: 3}
@@ -4602,7 +4602,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &988456542
 Transform:
   m_ObjectHideFlags: 0
@@ -4693,7 +4693,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &1122303690
 Transform:
   m_ObjectHideFlags: 0
@@ -4993,7 +4993,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &1451847849
 Transform:
   m_ObjectHideFlags: 0
@@ -5084,7 +5084,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &1459072354
 Transform:
   m_ObjectHideFlags: 0
@@ -5207,7 +5207,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &1754424252
 Transform:
   m_ObjectHideFlags: 0
@@ -5261,11 +5261,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1651647452766699858, guid: ff722cb587607ca49824b2a0c3f0e84e, type: 3}
       propertyPath: _npcNamesRequired.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1651647452766699858, guid: ff722cb587607ca49824b2a0c3f0e84e, type: 3}
       propertyPath: '_npcNamesRequired.Array.data[0]'
       value: James
+      objectReference: {fileID: 0}
+    - target: {fileID: 1651647452766699858, guid: ff722cb587607ca49824b2a0c3f0e84e, type: 3}
+      propertyPath: '_npcNamesRequired.Array.data[1]'
+      value: Wills
+      objectReference: {fileID: 0}
+    - target: {fileID: 1651647452766699858, guid: ff722cb587607ca49824b2a0c3f0e84e, type: 3}
+      propertyPath: '_evidenceKeysRequired.Array.data[0]'
+      value: Window
       objectReference: {fileID: 0}
     - target: {fileID: 1651647452766699858, guid: ff722cb587607ca49824b2a0c3f0e84e, type: 3}
       propertyPath: _loadSceneData.PlayerFacingDirection
@@ -5521,7 +5529,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &2119270902
 Transform:
   m_ObjectHideFlags: 0
@@ -5612,7 +5620,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &2125190013
 Transform:
   m_ObjectHideFlags: 0
@@ -5703,7 +5711,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &2144575182
 Transform:
   m_ObjectHideFlags: 0

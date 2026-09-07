@@ -60,6 +60,7 @@ public class NotebookUISystem : BaseUIPanelSystem
         _savedDataService = savedDataService;
         _evidenceKeysCollected.Clear();
         _evidenceKeysCollected.AddRange(_savedDataService.GetEvidenceKeys());
+        ClampPageIndex();
     }
 
     private void HandleEvidenceCollected(NotebookSavedData notebookData)
@@ -67,6 +68,7 @@ public class NotebookUISystem : BaseUIPanelSystem
         if (!_evidenceKeysCollected.Contains(notebookData.evidenceKey))
         {
             _evidenceKeysCollected.Add(notebookData.evidenceKey);
+            ClampPageIndex();
         }
     }
 

@@ -13,10 +13,45 @@ MonoBehaviour:
   m_Name: EvidenceDatabase
   m_EditorClassIdentifier: Assembly-CSharp::EvidenceDatabase
   evidenceData:
-  - key: StartRoom/Window
+  - key: Window
     name: "C\u1EEDa s\u1ED5"
     description: "C\u1EEDa s\u1ED5 \u0111ang m\u1EDF, c\xF3 th\u1EC3 c\xF3 ng\u01B0\u1EDDi
       \u0111\u1ED9t nh\u1EADp kh\xF4ng"
-    playerGuide: "H\xE3y t\xECm c\u1EA3nh s\xE1t"
-    evidenceSprite: {fileID: -4474943817160580795, guid: b53d8bb06f63aa2438acfb0aca926a03, type: 3}
+    playerGuide: "C\xF3 th\u1EC3 h\u1ECFi 2 v\u1ECB c\u1EA3nh s\xE1t \u0111\u1EC3
+      t\xECm th\xEAm manh m\u1ED1i"
+    evidenceSprite: {fileID: -8430137894388489581, guid: 15bcb3d2e06348741b092a9b4f1f4fb4, type: 3}
+    playerNote: 
+  - key: DanieDead
+    name: "Thi th\u1EC3 c\u1EE7a Danie"
+    description: "Danie ch\u1EBFt do b\u1ECB 1 ph\xE1t b\u1EAFn \u1EDF v\xF9ng b\u1EE5ng"
+    playerGuide: "C\xF3 th\u1EC3 h\u1ECFi 2 v\u1ECB c\u1EA3nh s\xE1t \u0111\u1EC3
+      t\xECm th\xEAm manh m\u1ED1i"
+    evidenceSprite: {fileID: -7153454237942430725, guid: e2ea3f5973dcf444a93785852505a074, type: 3}
+    playerNote: 
+  - key: ChrisDead
+    name: "Thi th\u1EC3 c\u1EE7a Chris"
+    description: "Chris ch\u1EBFt v\u1EDBi m\u1ED9t v\u1EBFt b\u1EAFn ngay s\xE1t
+      th\xE1i d\u01B0\u01A1ng, ngay v\u1ECB tr\xED b\u1ECB b\u1EAFn v\u1EABn c\xF2n
+      d\u1EA5u hi\u1EC7u kh\xF3i thu\u1ED1c s\xFAng tr\xEAn \u0111\xF3 nh\u01B0 th\u1EC3
+      s\xFAng \u0111\xE3 \xE1p s\xE1t v\xE0o \u0111\u1EA7u"
+    playerGuide: "C\xF3 th\u1EC3 h\u1ECFi 2 v\u1ECB c\u1EA3nh s\xE1t \u0111\u1EC3
+      t\xECm th\xEAm manh m\u1ED1i"
+    evidenceSprite: {fileID: 4474773934226949176, guid: e89f12aed94bdbf4c815b7b932f73144, type: 3}
+    playerNote: 
+  - key: Bed
+    name: "Chi\u1EBFc gi\u01B0\u1EDDng \u0111\xF4i"
+    description: "Chi\u1EBFc gi\u01B0\u1EDDng \u0111\xF4i c\u1EE7a c\u1EB7p \u0111\xF4i,
+      c\xF3 v\u1EBB n\xF3 c\xF2n ch\u01B0a \u0111\u01B0\u1EE3c d\u1ECDn d\u1EB9p"
+    playerGuide: 
+    evidenceSprite: {fileID: 5167690650097798016, guid: eb7ceb0aca2841241b9c43ca0a584523, type: 3}
+    playerNote: 
+  - key: Book
+    name: "M\u1ED9t quy\u1EC3n s\xE1ch"
+    description: "M\u1ED9t quy\u1EC3n s\xE1ch v\u1EDBi ti\xEAu \u0111\u1EC1 \u201CThe
+      Dreamer\u2019s Guide to the World\u201D, m\u1ED9t quy\u1EC3n s\xE1ch t\xEDch
+      c\u1EF1c v\u1EC1 du l\u1ECBch, c\xF3 ghi ch\xFA ch\u1EEF vi\u1EBFt tay tr\xEAn
+      trang \u0111\u1EA7u: \u201CG\u1EEDi Danie, \u0111\u1EEBng bao gi\u1EDD t\u1EEB
+      b\u1ECF gi\u1EA5c m\u01A1. Love, Chris\u201D."
+    playerGuide: 
+    evidenceSprite: {fileID: 1897645534519351546, guid: d8a2994f3aa56754c90a709d5955faab, type: 3}
     playerNote: 
