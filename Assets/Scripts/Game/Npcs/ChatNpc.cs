@@ -19,11 +19,11 @@ public class ChatNpc : Interactable, IHuman
     public override InteractableType InteractableType => InteractableType.NPC;
     public string NpcName => gameObject.name;
     public string NpcSystem { get; private set; } = "default";
-    public string StartUpDialogue { get; private set; } = "Hello";
+    public string StartUpDialogue { get; protected set; } = "Hello";
 
     public Vector3 ThoughIndicatorPosition => _spriteRenderer.GetTopCenter();
 
-    void Awake()
+    virtual protected void Awake()
     {
         if (_npcDatabase != null)
         {
@@ -46,7 +46,7 @@ public class ChatNpc : Interactable, IHuman
             _animator = GetComponent<Animator>();
     }
 
-    void Start()
+    virtual protected void Start()
     {
         _animSystem = new HumanAnimSystem(_animator, _animRefs, _initialFacingDirection);
     }

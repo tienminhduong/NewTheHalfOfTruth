@@ -131,6 +131,14 @@ public class SavedDataService : LogicOnlyService
         return null;
     }
 
+    public string GetCustomData(string key)
+    {
+        if (_customDataDictionary != null && _customDataDictionary.TryGetValue(key, out var value))
+            return value;
+
+        return null;
+    }
+
     public bool HasInteractedWithNPC(string npcName)
     {
         return _interactedNPCs != null && _interactedNPCs.Contains(npcName);
@@ -147,6 +155,7 @@ public class SavedDataService : LogicOnlyService
     private Dictionary<string, NotebookSavedData> _notebookDataDictionary;
     private HashSet<string> _interactedNPCs;
     private Dictionary<string, UnlockedDoorSavedData> _unlockedDoorsDictionary;
+    private Dictionary<string, string> _customDataDictionary;
 
     private void LoadFromPref()
     {
@@ -155,22 +164,28 @@ public class SavedDataService : LogicOnlyService
         {
             _playerSavedData = JsonUtility.FromJson<PlayerSavedData>(savedDataJson);
 
-            _notebookDataDictionary = new Dictionary<string, NotebookSavedData>();
+            _notebookDataDictionary ??= new Dictionary<string, NotebookSavedData>();
             foreach (var notebookData in _playerSavedData.notebookData)
             {
                 _notebookDataDictionary[notebookData.evidenceKey] = notebookData;
             }
 
-            _interactedNPCs = new HashSet<string>();
+            _interactedNPCs ??= new HashSet<string>();
             foreach (var npcData in _playerSavedData.interactedNPCs)
             {
                 _interactedNPCs.Add(npcData.name);
             }
 
-            _unlockedDoorsDictionary = new Dictionary<string, UnlockedDoorSavedData>();
+            _unlockedDoorsDictionary ??= new Dictionary<string, UnlockedDoorSavedData>();
             foreach (var doorData in _playerSavedData.unlockedDoors)
             {
                 _unlockedDoorsDictionary[doorData.doorName] = doorData;
+            }
+
+            _customDataDictionary ??= new Dictionary<string, string>();
+            foreach (var customData in _playerSavedData.customData)
+            {
+                _customDataDictionary[customData.key] = customData.value;
             }
         }
         else
@@ -209,12 +224,14 @@ public struct PlayerSavedData
     public List<NotebookSavedData> notebookData;
     public List<InteractedNPCSavedData> interactedNPCs;
     public List<UnlockedDoorSavedData> unlockedDoors;
+    public List<CustomSavedData> customData;
 
     public void EnsureNonNullLists()
     {
         notebookData ??= new List<NotebookSavedData>();
         interactedNPCs ??= new List<InteractedNPCSavedData>();
         unlockedDoors ??= new List<UnlockedDoorSavedData>();
+        customData ??= new List<CustomSavedData>();
     }
 }
 
@@ -236,6 +253,13 @@ public struct UnlockedDoorSavedData
 {
     public string doorName;
     public DoorUnlockedState unlockedState;
+}
+
+[Serializable]
+public struct CustomSavedData
+{
+    public string key;
+    public string value;
 }
 
 public enum DoorUnlockedState
