@@ -22,6 +22,7 @@ public class DialogueUISystem : BaseUIPanelSystem
 
     private static event Action<string, bool> OnShowDialogue;
     private static event Action<ChatNpc> OnShowChatNpcDialogue;
+    private static event Action<string[]> OnAutoPromptDialogue;
     public static void ShowDialogue(string dialogue, bool showInputPanel = true)
     {
         OnShowDialogue?.Invoke(dialogue, showInputPanel);
@@ -32,12 +33,19 @@ public class DialogueUISystem : BaseUIPanelSystem
         OnShowChatNpcDialogue?.Invoke(npc);
     }
 
+    public static void AutoPromptDialogue(string[] prompt)
+    {
+        OnAutoPromptDialogue?.Invoke(prompt);
+    }
+
     override protected void OnEnable()
     {
         base.OnEnable();
 
         OnShowDialogue += ShowDialogueBox;
         OnShowChatNpcDialogue += ShowDialogueBox;
+        OnAutoPromptDialogue += StartAutoPromptDialogue;
+
         dialogueText.OnTypingComplete += EnableSubmitButton;
 
         submitButton.AddListener(HandleSubmitButtonClick);
@@ -53,6 +61,8 @@ public class DialogueUISystem : BaseUIPanelSystem
 
         OnShowDialogue -= ShowDialogueBox;
         OnShowChatNpcDialogue -= ShowDialogueBox;
+        OnAutoPromptDialogue -= StartAutoPromptDialogue;
+
         dialogueText.OnTypingComplete -= EnableSubmitButton;
 
         submitButton.RemoveListener(HandleSubmitButtonClick);
@@ -163,5 +173,35 @@ public class DialogueUISystem : BaseUIPanelSystem
         _isWaitingForLLMResponse = lockPanel;
         cancelButton.SetInteractable(!lockPanel);
 
+    }
+
+    private async UniTask AutoPromptDialougeAsync(string[] prompt)
+    {
+        if (_llmService != null)
+        {
+            foreach (var question in prompt)
+            {
+                LLMResponse response = await _llmService.CallLLMAsync(_currentChatNpc.NpcName, _currentChatNpc.NpcSystem, question);
+                if (response.status == LLMResponse.Status.Success)
+                {
+                    ChangeDialogueText(response.response);
+                    await UniTask.Delay(2000); // Wait for 2 seconds before the next prompt
+                }
+                else
+                {
+                    Debug.LogError($"LLMService failed to generate a response: {response.response}");
+                    break; // Exit the loop if there's an error
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("LLMService is not available. Auto-prompt dialogue will not be sent.");
+        }
+    }
+
+    public void StartAutoPromptDialogue(string[] prompt)
+    {
+        AutoPromptDialougeAsync(prompt).Forget();
     }
 }

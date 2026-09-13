@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: StartRoom
   m_GUID: e2892c4c6176541499475c4a94dc1124
   m_SerializeEntries:
+  - m_GUID: 05df3a49b298a8b419505246b138fb0f
+    m_Address: Assets/GameAssets/Animations/Edward/WalkLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0ce4727ddc5c7d54a918296cf956d12b
     m_Address: Assets/GameAssets/Animations/James/WalkRight.anim
     m_ReadOnly: 0
@@ -37,6 +42,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3068133612ede8640ba3ab5ff98103db
     m_Address: Assets/GameAssets/Animations/James/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3553ee7194faabf4ea0379e7dfbb1cbc
+    m_Address: Assets/GameAssets/Animations/Edward/WalkRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 450ebc95ba7d4204aa9047d1ffa7f77d
+    m_Address: Assets/GameAssets/Animations/Edward/IdleLeft.anim
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -70,6 +85,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8b14bb32fedf8cd40bd386d59ed225b3
+    m_Address: Assets/GameAssets/Animations/Edward/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8cb8eeee0d0164c4c895c34030b5e6e9
+    m_Address: Assets/GameAssets/Animations/Edward/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 95ad3df6c6a505f47ae3bbefa31cc6c2
+    m_Address: Assets/GameAssets/Animations/Edward/IdleDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9b71fa150627aed48b29f844530bf006
     m_Address: Assets/GameAssets/Animations/James/IdleRight.anim
     m_ReadOnly: 0
@@ -77,6 +107,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9f6dcd733f4ae6b4aae0bfa44b087241
     m_Address: Assets/GameAssets/Animations/James/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a7833dcbb1c41c344b12794ccd3acb5c
+    m_Address: Assets/GameAssets/Animations/Edward/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b85db45de7197c54e86d52a5071d3d33
+    m_Address: Assets/GameAssets/Animations/Edward/IdleRight.anim
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

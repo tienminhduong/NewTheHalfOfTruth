@@ -1086,6 +1086,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: 24_Additional_Houses_32x32_37
+      rect:
+        serializedVersion: 2
+        x: 789
+        y: 790
+        width: 44
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 922970676d940e946803813b46ae9784
+      internalID: -1662891255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1133,6 +1155,7 @@ TextureImporter:
       24_Additional_Houses_32x32_34: 255391843616183714
       24_Additional_Houses_32x32_35: 2425198628663798252
       24_Additional_Houses_32x32_36: -8125542474288500801
+      24_Additional_Houses_32x32_37: -1662891255
       24_Additional_Houses_32x32_4: 8511685389567623544
       24_Additional_Houses_32x32_5: 3180299410351560430
       24_Additional_Houses_32x32_6: -6692324983772187301

@@ -83,6 +83,7 @@ public class ConditionDoor : Door
             return;
         if (_evidenceKeysRequiredSet.Count == 0 && _npcNamesRequiredSet.Count == 0)
         {
+            Debug.Log($"All conditions met for door '{DoorName}'. Unlocking door.");
             SetDoorUnlockedState(DoorUnlockedState.FirstTimeOpened);
         }
     }

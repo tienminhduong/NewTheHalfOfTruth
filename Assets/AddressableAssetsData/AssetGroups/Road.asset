@@ -155,6 +155,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8d75cce5f56526d4c8753ab1a113d09f
+    m_Address: Assets/GameAssets/Prefabs/ImageEvidence.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8f24bdcbe07d24540921e75c8266b3bb
     m_Address: Assets/GameAssets/Animations/Daniel/IdleLeft.anim
     m_ReadOnly: 0

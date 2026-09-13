@@ -5,6 +5,7 @@ public class Evidence : Interactable
     public override InteractableType InteractableType => InteractableType.Evidence;
     public string EvidenceKey => gameObject.name;
     [SerializeField] private EvidenceDatabase _evidenceDatabase;
+    [SerializeField] private bool disappearAfterInteraction = false;
 
     override protected void OnEnable()
     {
@@ -33,6 +34,9 @@ public class Evidence : Interactable
             SavedDataService.SaveNotebookData(EvidenceKey, "");
         else
             Debug.LogError("SavedDataService is not available. Cannot save notebook data.");
+
+        if (disappearAfterInteraction)
+            Destroy(gameObject);
     }
 
     protected override void SetupSavedService(IService service)
@@ -41,6 +45,12 @@ public class Evidence : Interactable
         if (SavedDataService != null)
         {
             IsInteractable = SavedDataService.GetPlayerNoteForEvidence(EvidenceKey) == null;
+        }
+
+        if (disappearAfterInteraction)
+        {
+            if (SavedDataService != null && SavedDataService.GetPlayerNoteForEvidence(EvidenceKey) != null)
+                Destroy(gameObject);
         }
     }
 }

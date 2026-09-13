@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class LLMService : LogicOnlyService
 {
     private const string BASE_URL = "https://rag-3-4lv0.onrender.com/api/query/ask";
+    public static event Action OnWeakPointHit;
     public override void Awake()
     {
         ServiceLocator.RegisterService(this);
@@ -64,6 +65,8 @@ public class LLMService : LogicOnlyService
         if (request.result == UnityWebRequest.Result.Success)
         {
             var apiResponse = JsonUtility.FromJson<LlmApiResponse>(request.downloadHandler.text);
+            if (apiResponse.weakPointHit)
+                OnWeakPointHit?.Invoke();
             return apiResponse.answer;
         }
         else

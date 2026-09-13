@@ -55,3 +55,22 @@ MonoBehaviour:
     playerGuide: 
     evidenceSprite: {fileID: 1897645534519351546, guid: d8a2994f3aa56754c90a709d5955faab, type: 3}
     playerNote: 
+  - key: ImageEvidence
+    name: "T\u1EA5m h\xECnh Johny \u0111\xE1nh r\u01A1i"
+    description: "\u0110\xE2y l\xE0 nh\xE0 c\u1EE7a Chris? T\u1EA1i sao Johny l\u1EA1i
+      c\xF3 t\u1EA5m h\xECnh n\xE0y? Chi\u1EBFc xe n\xE0y l\xE0 sao?"
+    playerGuide: 
+    evidenceSprite: {fileID: 3766430336987300451, guid: da75240182f5f7a409a35c12b1a5c1e3, type: 3}
+    playerNote: 
+  - key: Paper
+    name: "T\u1EDD gi\u1EA5y"
+    description: "V\xE3i"
+    playerGuide: 
+    evidenceSprite: {fileID: -1469909079130451432, guid: 478807c53e9978445833a68cb28cb089, type: 3}
+    playerNote: 
+  - key: CouplePicture
+    name: "H\xECnh \u1EA3nh"
+    description: "\u0110\xE2y l\xE0 Chris, Danie, v\xE0 ai v\u1EADy?"
+    playerGuide: 
+    evidenceSprite: {fileID: -1469909079130451432, guid: 478807c53e9978445833a68cb28cb089, type: 3}
+    playerNote: 

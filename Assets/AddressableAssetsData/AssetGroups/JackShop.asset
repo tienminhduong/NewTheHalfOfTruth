@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: JackShop
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: JackShop
+  m_GUID: c5502498a4f473644a0ba8165960263b
+  m_SerializeEntries:
+  - m_GUID: 08091590761c8b24f90bad226a037f1b
+    m_Address: Assets/GameAssets/Animations/Grandma/WalkRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 17eb8f64063b1434ba4bd76f88e05863
+    m_Address: Assets/GameAssets/Animations/Jack/IdleRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 388e1f6f171b57f42a00ac2d35889d7e
+    m_Address: Assets/GameAssets/Animations/Grandma/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 54f1a6ca8ce802f43955ebcd20c6433b
+    m_Address: Assets/GameAssets/Animations/Jack/IdleLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 55f3ade6c8442124483417264616acf3
+    m_Address: Assets/GameAssets/Animations/Jack/IdleDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5d6e66a0b4cf73744b27b376aa7cf08d
+    m_Address: Assets/GameAssets/Animations/Grandma/WalkLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6a20a17091f171c4899fb9ccfe642638
+    m_Address: Assets/GameAssets/Animations/Jack/WalkDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7580c5d660bfa2f4a8487bc97659c8e0
+    m_Address: Assets/GameAssets/Animations/Grandma/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a612981b32536fd4e98d8f362e683850
+    m_Address: Assets/GameAssets/Animations/Grandma/IdleRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ab8cb2e1c248e2c439d5734b5e183b56
+    m_Address: Assets/GameAssets/Animations/Grandma/IdleLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ba106347eaa03dc409c6bebb4d60562e
+    m_Address: Assets/GameAssets/Animations/Jack/IdleUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc6294f3e89afd04ea9901294e200326
+    m_Address: Assets/GameAssets/Animations/Jack/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d5d6226a2d0837040914f7205aa1c16d
+    m_Address: Assets/GameAssets/Animations/Grandma/IdleDown.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e20b6ab46f25d7549a38a0213fc4ec7b
+    m_Address: Assets/GameAssets/Animations/Grandma/WalkUp.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e62d9b9360c3d2b4fa062c49360e8a8e
+    m_Address: Assets/GameAssets/Animations/Jack/WalkRight.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f27eb887c9051cc438f9f2ec2cbc85bb
+    m_Address: Assets/GameAssets/Animations/Jack/WalkLeft.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3d575db7c147364438764608736a8e2d, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 42972f9a260f7e442b34e6e440c1e5a7, type: 2}
+    - {fileID: 11400000, guid: f090b541cae3e754bab934fd46faabdd, type: 2}

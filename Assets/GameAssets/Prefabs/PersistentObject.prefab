@@ -315,7 +315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DependencyInitializer
   _evidenceDatabase: {fileID: 11400000, guid: ddaee6ecb05ce2c4b85ad78f22e436df, type: 2}
-  _loadFromPrefs: 0
+  _loadFromPrefs: 1
 --- !u!1 &4247874951003054069
 GameObject:
   m_ObjectHideFlags: 0

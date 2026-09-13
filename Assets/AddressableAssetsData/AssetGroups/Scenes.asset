@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Scenes
   m_GUID: 25f2af458a418094da15093d0ca81bee
   m_SerializeEntries:
+  - m_GUID: 01fd54159c2c5494ab4bda84d4da4e7b
+    m_Address: Assets/Scenes/JohnyHouse.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1965c4349a725d24585ee5a26145a79f
     m_Address: Assets/Scenes/MainMenu.unity
     m_ReadOnly: 0
@@ -32,6 +37,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b8b0526bd5517e74c85dcd82d925832c
     m_Address: Assets/Scenes/BedRoom.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d4822687bd1e73045959b7d7d74d345a
+    m_Address: Assets/Scenes/JohnyHouseRoad.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd3b6e6a21838ae488f16a17cf33ddb1
+    m_Address: Assets/Scenes/JackRepairShop.unity
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

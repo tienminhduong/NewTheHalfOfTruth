@@ -26,11 +26,21 @@ MonoBehaviour:
     npcSystem: "Ng\u01B0\u1EDDi qua \u0111\u01B0\u1EDDng"
     startUpDialogue: "\u1ED2 ch\xE0o \xF4ng"
   - npcName: Thomas
-    npcSystem: "Ng\u01B0\u1EDDi qua \u0111\u01B0\u1EDDng"
+    npcSystem: "Ng\u01B0\u1EDDi qua \u0111\u01B0\u1EDDng n\xF3i nhi\u1EC1u"
     startUpDialogue: ...
   - npcName: Brad
     npcSystem: "Ng\u01B0\u1EDDi nhi\u1EC7t t\xECnh"
     startUpDialogue: ...
   - npcName: Johny
-    npcSystem: "M\u1ED9t ng\u01B0\u1EDDi \u0111i tr\xEAn \u0111\u01B0\u1EDDng"
+    npcSystem: "M\u1ED9t ng\u01B0\u1EDDi \u0111i tr\xEAn \u0111\u01B0\u1EDDng \u1EA5p
+      \xFAng"
     startUpDialogue: ...
+  - npcName: Jack
+    npcSystem: "M\u1ED9t ng\u01B0\u1EDDi \u1EA5p \xFAng, che gi\u1EA5u"
+    startUpDialogue: ...
+  - npcName: Edward
+    npcSystem: "B\xE1c s\u0129 ph\xE1p y"
+    startUpDialogue: "\u0110\xE3 c\xF3 k\u1EBFt qu\u1EA3 \u0111i\u1EC1u tra"
+  - npcName: Margaret
+    npcSystem: "Ng\u01B0\u1EDDi b\xE0 \u0111i\u1EC1m t\u1EC9nh"
+    startUpDialogue: "Ch\xE0o c\u1EADu"
