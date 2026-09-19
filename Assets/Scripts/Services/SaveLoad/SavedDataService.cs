@@ -2,35 +2,20 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SavedDataService : LogicOnlyService
+public class SavedDataService : BaseSaveLoadService<SavedDataService>
 {
     private PlayerSavedData _playerSavedData;
     private const string PlayerPrefsKey = "PlayerSavedData";
     private EvidenceDatabase _evidenceDatabase;
-    private bool _loadFromPrefs;
 
     public static event Action<NotebookSavedData> OnEvidenceNoteSaved;
     public static event Action<InteractedNPCSavedData> OnNPCInteractedSaved;
     public static event Action<UnlockedDoorSavedData> OnDoorUnlockedSaved;
 
-
-    public override void Awake()
-    {
-        LoadFromPref();
-        ServiceLocator.RegisterService(this);
-    }
-
-    public override void OnDestroy()
-    {
-        SaveToPref();
-        ServiceLocator.UnregisterService(this);
-    }
-
-    public SavedDataService(EvidenceDatabase database, bool loadFromPrefs = true)
+    public SavedDataService(EvidenceDatabase database, bool loadFromPrefs = true) : base(loadFromPrefs)
     {
         _evidenceDatabase = database;
         _evidenceDatabase.SetSavedDataService(this);
-        _loadFromPrefs = loadFromPrefs;
     }
 
     public void SaveNotebookData(string evidenceKey, string playerNote)
@@ -157,7 +142,7 @@ public class SavedDataService : LogicOnlyService
     private Dictionary<string, UnlockedDoorSavedData> _unlockedDoorsDictionary;
     private Dictionary<string, string> _customDataDictionary;
 
-    private void LoadFromPref()
+    protected override void LoadFromPref()
     {
         string savedDataJson = _loadFromPrefs ? PlayerPrefs.GetString(PlayerPrefsKey, string.Empty) : string.Empty;
         if (!string.IsNullOrEmpty(savedDataJson))
@@ -196,7 +181,7 @@ public class SavedDataService : LogicOnlyService
         }
     }
 
-    private void SaveToPref()
+    protected override void SaveToPref()
     {
         if (!_loadFromPrefs)
             return;

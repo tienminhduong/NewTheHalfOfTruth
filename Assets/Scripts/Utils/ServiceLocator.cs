@@ -18,6 +18,7 @@ public static class ServiceLocator
                 callback?.Invoke(service);
                 waitingOnInitCallbacks.Remove(type);
             }
+            Debug.Log($"Service of type {type} registered successfully.");
         }
         else
         {

@@ -3,19 +3,11 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class LLMService : LogicOnlyService
+public class LLMService : LogicOnlyService<LLMService>
 {
-    private const string BASE_URL = "https://rag-3-4lv0.onrender.com/api/query/ask";
+    private const string BASE_URL = "https://rag-streaming-faiss.onrender.com/api/query/ask";
+    private const string ERROR_MESSAGE = "Bạn hỏi gì thế tôi không hiểu??";
     public static event Action OnWeakPointHit;
-    public override void Awake()
-    {
-        ServiceLocator.RegisterService(this);
-    }
-
-    public override void OnDestroy()
-    {
-        ServiceLocator.UnregisterService(this);
-    }
 
     public async UniTask<LLMResponse> CallLLMAsync(string npcName = "", string npcSystem = "", string question = "")
     {
@@ -72,7 +64,7 @@ public class LLMService : LogicOnlyService
         else
         {
             Debug.LogError($"Error: {request.error}");
-            return null;
+            return ERROR_MESSAGE;
         }
     }
 }

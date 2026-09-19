@@ -40,4 +40,6 @@ public struct NPCData
     public string npcName;
     public string npcSystem;
     public string startUpDialogue;
+    public string npcDescription;
+    public string npcGuideChat;
 }

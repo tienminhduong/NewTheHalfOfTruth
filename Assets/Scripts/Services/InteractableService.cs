@@ -3,7 +3,7 @@ using CD;
 using UnityEngine;
 using UnityExtensions;
 
-public class InteractableService : MonoBehaviour, IService
+public class InteractableService : MonoBehaviourService<InteractableService>
 {
     [SerializeField] private float _interactionRange = 2f;
     [SerializeField] private RectTransform _interactionIndicatorCanvas;
@@ -152,15 +152,5 @@ public class InteractableService : MonoBehaviour, IService
         _currentInteractable = null;
         _trackingObject = null;
         _interactionIndicatorCanvas.gameObject.SetActive(false);
-    }
-
-    public void Awake()
-    {
-        ServiceLocator.RegisterService(this);
-    }
-
-    public void OnDestroy()
-    {
-        ServiceLocator.UnregisterService(this);
     }
 }

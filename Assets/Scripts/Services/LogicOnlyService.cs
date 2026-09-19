@@ -1,5 +1,12 @@
-public abstract class LogicOnlyService : IService
+public abstract class LogicOnlyService<T> : IService where T : LogicOnlyService<T>
 {
-    public abstract void Awake();
-    public abstract void OnDestroy();
+    public virtual void Awake()
+    {
+        ServiceLocator.RegisterService(this as T);
+    }
+
+    public virtual void OnDestroy()
+    {
+        ServiceLocator.UnregisterService(this as T);
+    }
 }

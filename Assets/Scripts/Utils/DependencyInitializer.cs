@@ -5,7 +5,7 @@ public class DependencyInitializer : Singleton<DependencyInitializer>
 {
     [SerializeField] private EvidenceDatabase _evidenceDatabase;
     [SerializeField] private bool _loadFromPrefs = true;
-    private readonly List<LogicOnlyService> _logicOnlyServices = new();
+    private readonly List<IService> _logicOnlyServices = new();
 
     protected override void Awake()
     {

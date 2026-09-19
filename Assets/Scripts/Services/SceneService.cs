@@ -6,7 +6,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.UI;
 
-public class SceneService : MonoBehaviour, IService
+public class SceneService : MonoBehaviourService<SceneService>
 {
     [SerializeField] private Image sceneTransitionImage;
     [SerializeField] private float fadeDuration = 1f;
@@ -15,10 +15,6 @@ public class SceneService : MonoBehaviour, IService
     private CD.LoadSceneData currentLoadSceneData;
     public CD.LoadSceneData CurrentLoadSceneData => currentLoadSceneData;
     public bool HasLoadData { get; private set; } = false;
-
-    public void Awake() => ServiceLocator.RegisterService(this);
-
-    public void OnDestroy() => ServiceLocator.UnregisterService(this);
 
     public void TransitionToScene(string sceneAddress)
     {
