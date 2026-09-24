@@ -43,6 +43,7 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
 
         _notebookDataDictionary[evidenceKey] = notebookData;
 
+        _playerSavedData.EnsureNonNullLists();
         for (int i = 0; i < _playerSavedData.notebookData.Count; i++)
         {
             if (_playerSavedData.notebookData[i].evidenceKey == evidenceKey)
@@ -68,6 +69,7 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
                 name = npcName
             };
 
+            _playerSavedData.EnsureNonNullLists();
             _playerSavedData.interactedNPCs.Add(npcData);
             OnNPCInteractedSaved?.Invoke(npcData);
         }
@@ -94,6 +96,7 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
             }
         }
 
+        _playerSavedData.EnsureNonNullLists();
         _playerSavedData.unlockedDoors.Add(doorData);
         OnDoorUnlockedSaved?.Invoke(doorData);
     }

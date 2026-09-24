@@ -15,6 +15,7 @@ public class ChatNpc : Interactable, IHuman
     [SerializeField] private bool _rotateBackAfterChat = true;
     private Animator _animator;
     protected HumanAnimSystem _animSystem;
+    protected ChatHistoryService _chatHistoryService;
 
     public override InteractableType InteractableType => InteractableType.NPC;
     public string NpcName => gameObject.name;
@@ -61,7 +62,11 @@ public class ChatNpc : Interactable, IHuman
     {
         Debug.Log("Interacted with ChatNpc:  " + gameObject.name);
         SavedDataService?.SaveInteractedNPC(gameObject.name);
-        DialogueUISystem.ShowChatNpcDialogue(this);
+        // DialogueUISystem.ShowChatNpcDialogue(this);
+        if (_chatHistoryService != null)
+        {
+            _chatHistoryService.ActiveChatKey = gameObject.name;
+        }
     }
 
     public virtual void OnChatEnd()
@@ -70,6 +75,8 @@ public class ChatNpc : Interactable, IHuman
         {
             _animSystem.PlayAnimation(_initialFacingDirection, CD.HumanState.Idle);
         }
+
+        _chatHistoryService?.ReleaseActiveChatKey();
     }
 
     public void RotateTo(CD.FaceDir direction)
@@ -80,5 +87,26 @@ public class ChatNpc : Interactable, IHuman
     void OnDestroy()
     {
         _animSystem?.Destroy();
+    }
+
+    private void HandleChatService(IService chatHistoryService) {
+        if (chatHistoryService is not ChatHistoryService chatService) {
+            Debug.LogError($"ServiceLocator returned a service of type {chatHistoryService.GetType()} instead of ChatHistoryService.");
+            return;
+        }
+
+        _chatHistoryService = chatService;
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        ServiceLocator.TryOrWaitForService<ChatHistoryService>(HandleChatService);
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        ServiceLocator.RemoveServiceCallback<ChatHistoryService>(HandleChatService);
     }
 }

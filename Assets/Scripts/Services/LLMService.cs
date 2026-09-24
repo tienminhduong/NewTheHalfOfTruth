@@ -9,6 +9,41 @@ public class LLMService : LogicOnlyService<LLMService>
     private const string ERROR_MESSAGE = "Bạn hỏi gì thế tôi không hiểu??";
     public static event Action OnWeakPointHit;
 
+    public bool ReleaseChat()
+    {
+        var prev = _chatHistoryService.ActiveChatKey;
+        _chatHistoryService.ActiveChatKey = null;
+
+        return prev != null;
+    }
+
+    private ChatHistoryService _chatHistoryService;
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        ServiceLocator.TryOrWaitForService<ChatHistoryService>(HandleChatHistoryServiceReady);
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        ServiceLocator.RemoveServiceCallback<ChatHistoryService>(HandleChatHistoryServiceReady);
+    }
+
+    private void HandleChatHistoryServiceReady(IService service)
+    {
+        if (service is not ChatHistoryService chatHistoryService)
+        {
+            Debug.LogError($"ServiceLocator returned a service of type {service.GetType()} instead of ChatHistoryService.");
+            return;
+        }
+
+        _chatHistoryService = chatHistoryService;
+    }
+
     public async UniTask<LLMResponse> CallLLMAsync(string npcName = "", string npcSystem = "", string question = "")
     {
         LLMRequest requestData = new()
@@ -17,12 +52,15 @@ public class LLMService : LogicOnlyService<LLMService>
             npcSystem = npcSystem,
             question = question
         };
+        _chatHistoryService?.PushChatItem("player", question);
 
         string jsonData = JsonUtility.ToJson(requestData);
         try
         {
             Debug.Log($"LLMService: Sending request to LLM API with data: {jsonData}");
             string response = await PostRequestAsync(BASE_URL, jsonData);
+            _chatHistoryService?.PushChatItem(npcName, response);
+            // This will cause a DivideByZeroException
             return new LLMResponse
             {
                 response = response,

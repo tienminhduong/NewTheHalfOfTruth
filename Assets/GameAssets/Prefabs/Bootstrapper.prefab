@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Bootstrapper
   loadSceneOnStart: 1
   sceneToLoad:
-    m_AssetGUID: 1965c4349a725d24585ee5a26145a79f
+    m_AssetGUID: 7aef4041e99641e40bbe0cbbbb31dbc4
     m_SubObjectName: 
     m_SubObjectType: 
     m_SubObjectGUID: 

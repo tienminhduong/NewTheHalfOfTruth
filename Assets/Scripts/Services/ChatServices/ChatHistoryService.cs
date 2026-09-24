@@ -1,27 +1,135 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class ChatHistoryService : LogicOnlyService<ChatHistoryService>
+public class ChatHistoryService : BaseSaveLoadService<ChatHistoryService>
 {
     private readonly Dictionary<string, ChatHistory> _chatHistories = new();
-    private bool _loadFromPrefs;
+    private const string PrefKeys = "ChatHistories";
 
-    private void LoadFromPref()
+    private string _activeChatKey = null;
+    public string ActiveChatKey
     {
-        // Load chat history from PlayerPrefs or any other persistent storage
+        get => _activeChatKey;
+        set
+        {
+            if (_activeChatKey != value)
+            {
+                _activeChatKey = value;
+                if (ActiveChatKey != null)
+                    ChatEvents.OnChatKeySet?.Invoke(_activeChatKey);
+                else
+                    ChatEvents.OnChatKeyReleased?.Invoke();
+            }
+        }
     }
 
-    private void SaveToPref()
+    public bool TryGetChatHistory(string key, out ChatHistory chatHistory)
     {
-        // Save chat history to PlayerPrefs or any other persistent storage
+        return _chatHistories.TryGetValue(key, out chatHistory);
+    }
+
+    public bool TryGetActiveChatHistory(out ChatHistory chatHistory)
+    {
+        if (ActiveChatKey == null)
+        {
+            chatHistory = default;
+            return false;
+        }
+        return _chatHistories.TryGetValue(ActiveChatKey, out chatHistory);
+    }
+
+    public void ReleaseActiveChatKey()
+    {
+        if (_activeChatKey != null)
+        {
+            _activeChatKey = null;
+            ChatEvents.OnChatKeyReleased?.Invoke();
+        }
+    }
+
+    public void PushChatItem(string personKey, string message)
+    {
+        if (ActiveChatKey == null)
+        {
+            Debug.LogWarning("No active chat key set. Cannot push chat item.");
+            return;
+        }
+
+        if (!_chatHistories.TryGetValue(ActiveChatKey, out var chatHistory))
+        {
+            chatHistory = new ChatHistory
+            {
+                key = ActiveChatKey,
+                chatItems = new List<ChatItem>()
+            };
+            _chatHistories[ActiveChatKey] = chatHistory;
+        }
+
+        chatHistory.EnsureNotNull();
+        var chatItem = new ChatItem { personKey = personKey, message = message };
+
+        chatHistory.chatItems.Add(chatItem);
+        ChatEvents.OnChatItemPushed?.Invoke(chatItem);
+    }
+
+    public ChatHistoryService(bool loadFromPrefs) : base(loadFromPrefs)
+    {
+    }
+
+    protected override void LoadFromPref()
+    {
+        if (PlayerPrefs.HasKey(PrefKeys))
+        {
+            var json = PlayerPrefs.GetString(PrefKeys);
+            var savedData = JsonUtility.FromJson<ChatHistorySaved>(json);
+            savedData.EnsureNotNull();
+            foreach (var chatHistory in savedData.chatHistories)
+            {
+                _chatHistories[chatHistory.key] = chatHistory;
+            }
+        }
+    }
+
+    protected override void SaveToPref()
+    {
+        var savedData = new ChatHistorySaved
+        {
+            chatHistories = new List<ChatHistory>(_chatHistories.Values)
+        };
+        var json = JsonUtility.ToJson(savedData);
+        PlayerPrefs.SetString(PrefKeys, json);
+        PlayerPrefs.Save();
     }
 }
 
+[Serializable]
 public struct ChatHistory
 {
     public string key;
     public List<ChatItem> chatItems;
+
+    public void EnsureNotNull()
+    {
+        chatItems ??= new List<ChatItem>();
+    }
 }
 
+[Serializable]
+public struct ChatHistorySaved
+{
+    public List<ChatHistory> chatHistories;
+    public void EnsureNotNull()
+    {
+        chatHistories ??= new List<ChatHistory>();
+        foreach (var chatHistory in chatHistories)
+        {
+            chatHistory.EnsureNotNull();
+        }
+    }
+}
+
+[Serializable]
 public struct ChatItem
 {
     public string personKey; // Name of the person, 'player' for Player
