@@ -457,17 +457,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1184497571290239128, guid: 908930411c341bd46999ccf339599cc1, type: 3}
+      propertyPath: _endingCutsceneReference.m_AssetGUID
+      value: f9e7db8f17484784fba189f64d3b0125
+      objectReference: {fileID: 0}
     - target: {fileID: 2404425740579132214, guid: 908930411c341bd46999ccf339599cc1, type: 3}
       propertyPath: m_Name
       value: Johny
       objectReference: {fileID: 0}
     - target: {fileID: 5981165697942513620, guid: 908930411c341bd46999ccf339599cc1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.4
+      value: -1.07
       objectReference: {fileID: 0}
     - target: {fileID: 5981165697942513620, guid: 908930411c341bd46999ccf339599cc1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.8
+      value: -7.3
       objectReference: {fileID: 0}
     - target: {fileID: 5981165697942513620, guid: 908930411c341bd46999ccf339599cc1, type: 3}
       propertyPath: m_LocalPosition.z

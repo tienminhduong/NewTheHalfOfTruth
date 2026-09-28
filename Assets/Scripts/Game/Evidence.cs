@@ -6,6 +6,18 @@ public class Evidence : Interactable
     public string EvidenceKey => gameObject.name;
     [SerializeField] private EvidenceDatabase _evidenceDatabase;
     [SerializeField] private bool disappearAfterInteraction = false;
+    [SerializeField] private GameObject _interactionIndicator;
+
+    public override bool IsInteractable
+    {
+        get => base.IsInteractable;
+        set
+        {
+            base.IsInteractable = value;
+            if (_interactionIndicator != null)
+                _interactionIndicator.SetActive(value);
+        }
+    }
 
     override protected void OnEnable()
     {

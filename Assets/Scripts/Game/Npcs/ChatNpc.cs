@@ -65,7 +65,7 @@ public class ChatNpc : Interactable, IHuman
         // DialogueUISystem.ShowChatNpcDialogue(this);
         if (_chatHistoryService != null)
         {
-            _chatHistoryService.ActiveChatKey = gameObject.name;
+            _chatHistoryService.ActiveChatNpc = this;
         }
     }
 

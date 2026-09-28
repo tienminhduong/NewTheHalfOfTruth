@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Cutscene
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Cutscene
+  m_GUID: f855ca27281f4e245862baa7f474b3e8
+  m_SerializeEntries:
+  - m_GUID: 75cd4c8ce38b0fc408f4a01cf1edf1e3
+    m_Address: Assets/Scenes/FirstCutscene.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f9e7db8f17484784fba189f64d3b0125
+    m_Address: Assets/Scenes/EndScene.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3d575db7c147364438764608736a8e2d, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 00c6d102dbda0be408a8bfdf1a0f4ae1, type: 2}
+    - {fileID: 11400000, guid: 36b6e868774b9314bbf6b272b52c2d7e, type: 2}

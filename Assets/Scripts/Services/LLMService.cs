@@ -5,14 +5,16 @@ using UnityEngine.Networking;
 
 public class LLMService : LogicOnlyService<LLMService>
 {
-    private const string BASE_URL = "https://rag-streaming-faiss.onrender.com/api/query/ask";
+    private const string BASE_URL = "https://rag-jkoh.onrender.com/api/query/ask";
     private const string ERROR_MESSAGE = "Bạn hỏi gì thế tôi không hiểu??";
     public static event Action OnWeakPointHit;
 
     public bool ReleaseChat()
     {
-        var prev = _chatHistoryService.ActiveChatKey;
-        _chatHistoryService.ActiveChatKey = null;
+        var prev = _chatHistoryService.ActiveChatNpc;
+        _chatHistoryService.ActiveChatNpc = null;
+        if (prev != null)
+            prev.OnChatEnd();
 
         return prev != null;
     }
@@ -58,7 +60,13 @@ public class LLMService : LogicOnlyService<LLMService>
         try
         {
             Debug.Log($"LLMService: Sending request to LLM API with data: {jsonData}");
+#if BENCHMARK_TIME
+#else
+#endif
             string response = await PostRequestAsync(BASE_URL, jsonData);
+#if BENCHMARK_TIME
+#else
+#endif
             _chatHistoryService?.PushChatItem(npcName, response);
             // This will cause a DivideByZeroException
             return new LLMResponse

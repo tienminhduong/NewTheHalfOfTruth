@@ -5,7 +5,6 @@ using TMPro;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class ChatUISystem : BaseUIPanelSystem
 {
     [SerializeField] private ChatBubble _chatBubblePrefab;
@@ -24,7 +23,7 @@ public class ChatUISystem : BaseUIPanelSystem
     private LLMService _llmService;
     private ChatHistoryService _chatHistoryService;
 
-    private string _currentNPCName;
+    private ChatNpc _currentNPCName;
     private bool _isWaitingForLLMResponse = false;
     private bool IsUpdatingBubbleThough => _isWaitingForLLMResponse;
 
@@ -74,7 +73,7 @@ public class ChatUISystem : BaseUIPanelSystem
 
         if (!string.IsNullOrEmpty(chatContent))
         {
-            _llmService?.CallLLMAsync(_currentNPCName, "TestSystem", chatContent);
+            _llmService?.CallLLMAsync(_currentNPCName.NpcName, _currentNPCName.NpcSystem, chatContent);
             chatContent = string.Empty;
         }
         else
@@ -158,7 +157,7 @@ public class ChatUISystem : BaseUIPanelSystem
         _activeChatBubbles.Clear();
     }
 
-    private void HandleKeySet(string activeChatKey)
+    private void HandleKeySet(ChatNpc activeChatKey)
     {
         _currentNPCName = activeChatKey;
         OpenPanel();
@@ -174,8 +173,8 @@ public class ChatUISystem : BaseUIPanelSystem
     {
         base.OpenPanel();
 
-        _npcNameText.text = _currentNPCName;
-        var npcData = _npcDatabase.GetNPCData(_currentNPCName);
+        _npcNameText.text = _currentNPCName.NpcName;
+        var npcData = _npcDatabase.GetNPCData(_currentNPCName.NpcName);
         _npcDescriptionText.text = npcData.npcDescription;
 
         if (_chatHistoryService.TryGetActiveChatHistory(out var chatHistory))
@@ -195,6 +194,8 @@ public class ChatUISystem : BaseUIPanelSystem
 
     private void OnSubmitButtonClicked()
     {
+        if (_isWaitingForLLMResponse)
+            return;
         string playerInput = _inputField.text;
         if (string.IsNullOrWhiteSpace(playerInput))
         {
@@ -202,11 +203,11 @@ public class ChatUISystem : BaseUIPanelSystem
             return;
         }
 
-        var system = _npcDatabase.GetNPCData(_currentNPCName).npcSystem;
+        var system = _npcDatabase.GetNPCData(_currentNPCName.NpcName).npcSystem;
         _isWaitingForLLMResponse = true;
-        
 
-        _llmService?.CallLLMAsync(_currentNPCName, system, playerInput).ContinueWith((_) =>
+
+        _llmService?.CallLLMAsync(_currentNPCName.NpcName, system, playerInput).ContinueWith((_) =>
         {
             _isWaitingForLLMResponse = false;
             if (_thinkingBubble != null)
@@ -239,7 +240,6 @@ public class ChatUISystem : BaseUIPanelSystem
         _thinkingCharCount = DMath.GetNextInRange(_thinkingCharCount, 1, _thinkingMessage.Length, loop: true);
         // _thinkingCharCount = Mathf.Clamp(_thinkingCharCount, 1, _thinkingMessage.Length);
     }
-
     private void OnBeforeCanvasRender()
     {
         Canvas.willRenderCanvases -= OnBeforeCanvasRender;

@@ -13,6 +13,10 @@ public class Johny : ChatNpc
 
     [Title("Regret player question")]
     [SerializeField] private string[] playerQuestionsToRegret;
+    [SerializeField] private AssetReference _endingCutsceneReference;
+    private SceneService _sceneService;
+
+    private bool isWeakPointHit = false;
 
 
     protected override void OnEnable()
@@ -20,6 +24,8 @@ public class Johny : ChatNpc
         base.OnEnable();
 
         LLMService.OnWeakPointHit += HandleWeakPointHit;
+
+        ServiceLocator.TryOrWaitForService<SceneService>(SetupSceneService);
     }
 
     protected override void OnDisable()
@@ -27,6 +33,8 @@ public class Johny : ChatNpc
         base.OnDisable();
 
         LLMService.OnWeakPointHit -= HandleWeakPointHit;
+
+        ServiceLocator.RemoveServiceCallback<SceneService>(SetupSceneService);
     }
 
     public override void OnChatEnd()
@@ -35,6 +43,14 @@ public class Johny : ChatNpc
 
         if (gameObject.scene.name == _roadSceneName)
             LoadSpawnImageAsync(destroyCancellationToken).ContinueWith(MoveOutScreen);
+
+        if (isWeakPointHit)
+        {
+            if (_endingCutsceneReference != null)
+            {
+                _sceneService?.TransitionToScene(_endingCutsceneReference);
+            }
+        }
     }
 
     protected override void SetupSavedService(IService service)
@@ -50,6 +66,18 @@ public class Johny : ChatNpc
                 else
                     StartUpDialogue = _dialogueAfterFirstInteraction;
             }
+        }
+    }
+
+    protected void SetupSceneService(IService service)
+    {
+        if (service is SceneService sceneService)
+        {
+            _sceneService = sceneService;
+        }
+        else
+        {
+            Debug.LogError($"ServiceLocator returned a service of type {service.GetType()} instead of SceneService.");
         }
     }
 
@@ -80,5 +108,6 @@ public class Johny : ChatNpc
         {
             DialogueUISystem.AutoPromptDialogue(playerQuestionsToRegret);
         }
+        isWeakPointHit = true;
     }
 }

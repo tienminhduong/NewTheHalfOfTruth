@@ -18,6 +18,13 @@ namespace CD
         public AnimClipReference(string guid) : base(guid) { }
     }
 
+    [Serializable]
+    public struct CutsceneData
+    {
+        public string sceneTriggerAddress;
+        public AssetReference cutsceneAsset;
+    }
+
     public enum FaceDir
     {
         Left,

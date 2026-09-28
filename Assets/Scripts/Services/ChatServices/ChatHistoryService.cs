@@ -7,17 +7,17 @@ public class ChatHistoryService : BaseSaveLoadService<ChatHistoryService>
     private readonly Dictionary<string, ChatHistory> _chatHistories = new();
     private const string PrefKeys = "ChatHistories";
 
-    private string _activeChatKey = null;
-    public string ActiveChatKey
+    private ChatNpc _activeChatNpc = null;
+    public ChatNpc ActiveChatNpc
     {
-        get => _activeChatKey;
+        get => _activeChatNpc;
         set
         {
-            if (_activeChatKey != value)
+            if (_activeChatNpc != value)
             {
-                _activeChatKey = value;
-                if (ActiveChatKey != null)
-                    ChatEvents.OnChatKeySet?.Invoke(_activeChatKey);
+                _activeChatNpc = value;
+                if (ActiveChatNpc != null)
+                    ChatEvents.OnChatKeySet?.Invoke(_activeChatNpc);
                 else
                     ChatEvents.OnChatKeyReleased?.Invoke();
             }
@@ -31,39 +31,39 @@ public class ChatHistoryService : BaseSaveLoadService<ChatHistoryService>
 
     public bool TryGetActiveChatHistory(out ChatHistory chatHistory)
     {
-        if (ActiveChatKey == null)
+        if (ActiveChatNpc == null)
         {
             chatHistory = default;
             return false;
         }
-        return _chatHistories.TryGetValue(ActiveChatKey, out chatHistory);
+        return _chatHistories.TryGetValue(ActiveChatNpc.NpcName, out chatHistory);
     }
 
     public void ReleaseActiveChatKey()
     {
-        if (_activeChatKey != null)
+        if (_activeChatNpc != null)
         {
-            _activeChatKey = null;
+            _activeChatNpc = null;
             ChatEvents.OnChatKeyReleased?.Invoke();
         }
     }
 
     public void PushChatItem(string personKey, string message)
     {
-        if (ActiveChatKey == null)
+        if (ActiveChatNpc == null)
         {
             Debug.LogWarning("No active chat key set. Cannot push chat item.");
             return;
         }
 
-        if (!_chatHistories.TryGetValue(ActiveChatKey, out var chatHistory))
+        if (!_chatHistories.TryGetValue(ActiveChatNpc.NpcName, out var chatHistory))
         {
             chatHistory = new ChatHistory
             {
-                key = ActiveChatKey,
+                key = ActiveChatNpc.NpcName,
                 chatItems = new List<ChatItem>()
             };
-            _chatHistories[ActiveChatKey] = chatHistory;
+            _chatHistories[ActiveChatNpc.NpcName] = chatHistory;
         }
 
         chatHistory.EnsureNotNull();

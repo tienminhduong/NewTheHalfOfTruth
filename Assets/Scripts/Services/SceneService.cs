@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -10,6 +11,27 @@ public class SceneService : MonoBehaviourService<SceneService>
 {
     [SerializeField] private Image sceneTransitionImage;
     [SerializeField] private float fadeDuration = 1f;
+
+    [SerializeField] List<CD.CutsceneData> cutsceneDataList = new();
+
+    private readonly Dictionary<string, CD.CutsceneData> cutsceneDataDict = new();
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        foreach (var cutsceneData in cutsceneDataList)
+        {
+            if (!cutsceneDataDict.ContainsKey(cutsceneData.sceneTriggerAddress))
+            {
+                cutsceneDataDict.Add(cutsceneData.sceneTriggerAddress, cutsceneData);
+            }
+            else
+            {
+                Debug.LogWarning($"Duplicate scene trigger address found: {cutsceneData.sceneTriggerAddress}. Only the first occurrence will be used.");
+            }
+        }
+    }
 
     private SceneInstance activeSceneInstance;
     private CD.LoadSceneData currentLoadSceneData;
@@ -45,7 +67,8 @@ public class SceneService : MonoBehaviourService<SceneService>
         await sceneTransitionImage.DOFade(1, fadeDuration).AsyncWaitForCompletion();
         sceneTransitionImage.raycastTarget = true;
         InputHandler.FocusUIInput();
-
+        if (cutsceneDataDict.TryGetValue(sceneAddress, out var cutsceneData))
+            sceneAddress = cutsceneData.cutsceneAsset.RuntimeKey.ToString();
         var loadOperation = Addressables.LoadSceneAsync(sceneAddress);
         activeSceneInstance = await loadOperation.Task;
 

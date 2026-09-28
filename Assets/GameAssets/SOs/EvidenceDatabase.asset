@@ -64,7 +64,9 @@ MonoBehaviour:
     playerNote: 
   - key: Paper
     name: "T\u1EDD gi\u1EA5y"
-    description: "V\xE3i"
+    description: "\u0110\xE2y l\xE0 nh\u1EEFng \u0111\u1ECBa \u0111i\u1EC3m h\u1ECD
+      s\u1EBD \u0111\u1ECBnh \u0111i sao, m\u1ED9t ng\u01B0\u1EDDi c\xF3 nhi\u1EC1u
+      d\u1EF1 \u0111\u1ECBnh nh\u01B0 v\u1EADy t\u1EA1i sao l\u1EA1i t\u1EF1 s\xE1t?"
     playerGuide: 
     evidenceSprite: {fileID: -1469909079130451432, guid: 478807c53e9978445833a68cb28cb089, type: 3}
     playerNote: 

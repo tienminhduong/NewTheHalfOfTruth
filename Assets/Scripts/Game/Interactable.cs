@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class Interactable : MonoBehaviour
 {
-    public bool IsInteractable { get; set; } = true;
+    public virtual bool IsInteractable { get; set; } = true;
     public abstract InteractableType InteractableType { get; }
 
     private InteractableService _interactableService;
