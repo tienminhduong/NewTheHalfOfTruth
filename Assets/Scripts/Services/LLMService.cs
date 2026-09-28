@@ -61,10 +61,14 @@ public class LLMService : LogicOnlyService<LLMService>
         {
             Debug.Log($"LLMService: Sending request to LLM API with data: {jsonData}");
 #if BENCHMARK_TIME
+System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
 #else
 #endif
             string response = await PostRequestAsync(BASE_URL, jsonData);
 #if BENCHMARK_TIME
+            stopwatch.Stop();
+            Debug.Log($"LLMService: LLM API call time: {stopwatch.ElapsedMilliseconds} ms");
 #else
 #endif
             _chatHistoryService?.PushChatItem(npcName, response);
