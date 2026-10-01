@@ -12,6 +12,7 @@ public class DependencyInitializer : Singleton<DependencyInitializer>
     {
         base.Awake();
 
+        _logicOnlyServices.Add(new FileLogService());
         _logicOnlyServices.Add(new SavedDataService(_evidenceDatabase, _loadFromPrefs));
         _logicOnlyServices.Add(new ChatHistoryService(_loadFromPrefs));
         _logicOnlyServices.Add(new LLMService());
