@@ -29,6 +29,8 @@ public class ChatUISystem : BaseUIPanelSystem
 
     [Header("Thinking Bubble")]
     [ReadOnly][SerializeField] private ChatBubble _thinkingBubble;
+    private ChatBubble _streamingResponseBubble;
+    private string _streamingResponseText = string.Empty;
     [SerializeField] private string _thinkingMessage = "...";
     [SerializeField] private float _thinkingInterval = 0.5f; // in seconds
     [SerializeField] private int _thinkingCharCount = 0;
@@ -119,6 +121,14 @@ public class ChatUISystem : BaseUIPanelSystem
             return;
         }
 
+        if (chatItem.personKey != "player" && _streamingResponseBubble != null)
+        {
+            _streamingResponseBubble.SetText(chatItem.message);
+            _streamingResponseBubble.ForceUpdateLayout();
+            _streamingResponseBubble = null;
+            _streamingResponseText = string.Empty;
+            return;
+        }
 
         GetChatBubbleFromPool(chatItem.message, chatItem.personKey == "player");
     }
@@ -207,21 +217,42 @@ public class ChatUISystem : BaseUIPanelSystem
         _isWaitingForLLMResponse = true;
 
 
-        _llmService?.CallLLMAsync(_currentNPCName.NpcName, system, playerInput).ContinueWith((_) =>
-        {
-            _isWaitingForLLMResponse = false;
-            if (_thinkingBubble != null)
-            {
-                ReturnChatBubbleToPool(_thinkingBubble);
-                _thinkingBubble = null;
-                _thinkingTimer.IsRunning = false;
-            }
-        }).Forget();
+        _llmService?.CallLLMAsync(_currentNPCName.NpcName, system, playerInput, AppendStreamingResponse)
+            .ContinueWith(HandleLLMCallCompleted)
+            .Forget();
 
         _thinkingBubble = GetChatBubbleFromPool(_thinkingMessage, isPlayer: false);
         _thinkingTimer.StartTimer(_thinkingInterval);
 
         _inputField.text = string.Empty;
+    }
+
+    private void AppendStreamingResponse(string token)
+    {
+        if (_streamingResponseBubble == null)
+            _streamingResponseBubble = GetChatBubbleFromPool();
+
+        _streamingResponseText += token;
+        _streamingResponseBubble.SetText(_streamingResponseText);
+        _streamingResponseBubble.ForceUpdateLayout();
+    }
+
+    private void HandleLLMCallCompleted(LLMResponse response)
+    {
+        _isWaitingForLLMResponse = false;
+        if (_thinkingBubble != null)
+        {
+            ReturnChatBubbleToPool(_thinkingBubble);
+            _thinkingBubble = null;
+            _thinkingTimer.IsRunning = false;
+        }
+
+        if (response.status != LLMResponse.Status.Success && _streamingResponseBubble != null)
+        {
+            ReturnChatBubbleToPool(_streamingResponseBubble);
+            _streamingResponseBubble = null;
+            _streamingResponseText = string.Empty;
+        }
     }
 
     private void Update()
