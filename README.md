@@ -6,6 +6,8 @@ NewTheHalfOfTruth is a 2D investigation and adventure game built with Unity. The
 
 NPC conversations are sent to an external LLM/RAG service through `LLMService`. The game also stores player progression locally, including interacted NPCs, evidence notes, unlocked doors, and custom save data.
 
+The project targets the Web platform and is intended to be published on itch.io. Web builds must therefore be tested in a browser and should preserve browser-compatible networking, local persistence, input, and Addressables behavior.
+
 ## Main Technology
 
 | Area | Technology |
@@ -22,6 +24,7 @@ NPC conversations are sent to an external LLM/RAG service through `LLMService`. 
 | UI | Unity UI and TextMesh Pro |
 | Inspector tooling | Tri Inspector |
 | NPC dialogue | HTTP requests to an external RAG/LLM API |
+| Deployment target | Web platform, published on itch.io |
 
 The external dialogue endpoint currently used by `LLMService` is:
 
@@ -203,6 +206,10 @@ Player start point and facing direction restored
 ```
 
 `SceneService` controls the transition overlay, temporarily switches input focus to UI, loads the Addressable scene, and restores player input afterward. It can also map a scene trigger address to a cutscene asset before loading.
+
+Configured cutscene mappings are one-time transitions. `SceneService` stores a PlayerPrefs key derived from the configured scene trigger address immediately before loading the cutscene. Later transitions using the same trigger address skip the cutscene and load the normal target scene directly.
+
+After `Assets/Scenes/EndScene.unity` finishes loading, `SceneService` starts a one-time upload of `Logs/game.log` to the configured Google Form. The log is submitted as text in the form field `entry.207076898`; the local file is retained if the upload fails.
 
 Scene load data is consumed by `Player`, which uses the configured start-point identifier to position itself and applies the configured facing direction.
 

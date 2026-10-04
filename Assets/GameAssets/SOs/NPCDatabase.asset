@@ -67,7 +67,8 @@ MonoBehaviour:
   - npcName: Edward
     npcSystem: "B\xE1c s\u0129 ph\xE1p y"
     startUpDialogue: "\u0110\xE3 c\xF3 k\u1EBFt qu\u1EA3 \u0111i\u1EC1u tra"
-    npcDescription: 
+    npcDescription: "B\xE1c s\u0129 ph\xE1p y. B\u1EA1n c\xF3 th\u1EC3 h\u1ECFi v\u1EC1
+      k\u1EBFt qu\u1EA3 kh\xE1m nghi\u1EC7m 2 n\u1EA1n nh\xE2n"
     npcGuideChat: 
   - npcName: Margaret
     npcSystem: "Ng\u01B0\u1EDDi b\xE0 \u0111i\u1EC1m t\u1EC9nh"

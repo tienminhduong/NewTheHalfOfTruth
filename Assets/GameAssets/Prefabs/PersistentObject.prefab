@@ -725,6 +725,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneService
   sceneTransitionImage: {fileID: 525526242023641137}
   fadeDuration: 0.2
+  endgameSceneAddress: Assets/Scenes/EndScene.unity
   cutsceneDataList:
   - sceneTriggerAddress: Assets/Scenes/StartRoad.unity
     cutsceneAsset:

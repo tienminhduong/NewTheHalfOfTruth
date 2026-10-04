@@ -10,16 +10,23 @@ using UnityEngine.UI;
 
 public class SceneService : MonoBehaviourService<SceneService>
 {
+    private const string CutscenePlayedKeyPrefix = "SceneService.CutscenePlayed.";
+
     [SerializeField] private Image sceneTransitionImage;
     [SerializeField] private float fadeDuration = 1f;
+    [SerializeField] private string endgameSceneAddress = "Assets/Scenes/EndScene.unity";
 
     [SerializeField] List<CD.CutsceneData> cutsceneDataList = new();
 
     private readonly Dictionary<string, CD.CutsceneData> cutsceneDataDict = new();
+    private bool _logUploadStarted;
+    private FileLogService _fileLogService;
 
     public override void Awake()
     {
         base.Awake();
+
+        _fileLogService = ServiceLocator.GetService<FileLogService>();
 
         foreach (var cutsceneData in cutsceneDataList)
         {
@@ -69,7 +76,15 @@ public class SceneService : MonoBehaviourService<SceneService>
         sceneTransitionImage.raycastTarget = true;
         InputHandler.FocusUIInput();
         if (cutsceneDataDict.TryGetValue(sceneAddress, out var cutsceneData))
-            sceneAddress = cutsceneData.cutsceneAsset.RuntimeKey.ToString();
+        {
+            var cutscenePlayedKey = GetCutscenePlayedKey(sceneAddress);
+            if (!PlayerPrefs.HasKey(cutscenePlayedKey))
+            {
+                PlayerPrefs.SetInt(cutscenePlayedKey, 1);
+                PlayerPrefs.Save();
+                sceneAddress = cutsceneData.cutsceneAsset.RuntimeKey.ToString();
+            }
+        }
 
         var prevSceneHandle = activeSceneHandle;
         var loadOperation = Addressables.LoadSceneAsync(sceneAddress);
@@ -81,6 +96,17 @@ public class SceneService : MonoBehaviourService<SceneService>
         await sceneTransitionImage.DOFade(0, fadeDuration).AsyncWaitForCompletion();
         sceneTransitionImage.raycastTarget = false;
         InputHandler.FocusPlayerInput();
+
+        if (!_logUploadStarted && string.Equals(sceneAddress, endgameSceneAddress, StringComparison.Ordinal))
+        {
+            _logUploadStarted = true;
+            _fileLogService?.UploadLogToGoogleFormAsync().Forget();
+        }
+    }
+
+    private static string GetCutscenePlayedKey(string sceneTriggerAddress)
+    {
+        return CutscenePlayedKeyPrefix + sceneTriggerAddress;
     }
 
     private async UniTask UnloadActiveSceneAsync(AsyncOperationHandle<SceneInstance> sceneHandle)

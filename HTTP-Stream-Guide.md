@@ -274,7 +274,7 @@ else
 The final text is then passed back to `CallLLMAsync(...)`, which stores it in chat history and returns an `LLMResponse`:
 
 ```csharp
-_fileLogService?.LogConversation(BASE_URL, question, response);
+_fileLogService?.LogConversation(npcName, question, response, elapsedMilliseconds);
 _chatHistoryService?.PushChatItem(npcName, response);
 
 return new LLMResponse

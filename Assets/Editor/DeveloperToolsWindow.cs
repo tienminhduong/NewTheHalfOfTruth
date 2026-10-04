@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -30,6 +31,7 @@ public sealed class DeveloperToolsWindow : EditorWindow
     private int _selectedLogIndex = -1;
     private Vector2 _logScrollPosition;
     private string _logError;
+    private string _logUploadStatus;
 
     [MenuItem("Tools/Developer Tools")]
     public static void ShowWindow()
@@ -165,6 +167,14 @@ public sealed class DeveloperToolsWindow : EditorWindow
 
         if (!string.IsNullOrEmpty(_logError))
             EditorGUILayout.HelpBox(_logError, MessageType.Error);
+        if (!string.IsNullOrEmpty(_logUploadStatus))
+            EditorGUILayout.HelpBox(_logUploadStatus, MessageType.Info);
+
+        using (new EditorGUI.DisabledScope(!File.Exists(Path.Combine(GetLogsDirectory(), LogFileName))))
+        {
+            if (GUILayout.Button("Upload Current Log to Google Form"))
+                UploadCurrentLog();
+        }
 
         if (_logFiles.Count == 0)
         {
@@ -312,6 +322,23 @@ public sealed class DeveloperToolsWindow : EditorWindow
                 _logError = $"Could not delete {file.Name}: {exception.Message}";
             }
         }
+    }
+
+    private void UploadCurrentLog()
+    {
+        _logUploadStatus = "Uploading current log...";
+        _logError = null;
+        Repaint();
+
+        FileLogService.UploadLogFileToGoogleFormAsync(Path.Combine(GetLogsDirectory(), LogFileName))
+            .ContinueWith(uploaded =>
+            {
+                _logUploadStatus = uploaded
+                    ? "Current log uploaded successfully."
+                    : "Current log upload failed. Check the Console for details.";
+                Repaint();
+            })
+            .Forget();
     }
 
     private bool TryGetSelectedLog(out FileInfo file)

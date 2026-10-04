@@ -61,6 +61,7 @@ public class LLMService : LogicOnlyService<LLMService>
         _chatHistoryService?.PushChatItem("player", question);
 
         string jsonData = JsonUtility.ToJson(requestData);
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         try
         {
             Debug.Log($"LLMService: Sending request to LLM API with data: {jsonData}");
@@ -71,18 +72,15 @@ public class LLMService : LogicOnlyService<LLMService>
                 onTokenReceived?.Invoke(token);
             };
 #if BENCHMARK_TIME
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-#else
-#endif
             string response = await PostRequestAsync(BASE_URL, jsonData, tokenLogger);
-#if BENCHMARK_TIME
             stopwatch.Stop();
             Debug.Log($"LLMService: LLM API call time: {stopwatch.ElapsedMilliseconds} ms");
-            _fileLogService?.LogBenchmarkTime(stopwatch.ElapsedMilliseconds);
+            // _fileLogService?.LogBenchmarkTime(stopwatch.ElapsedMilliseconds);
 #else
+            string response = await PostRequestAsync(BASE_URL, jsonData, tokenLogger);
 #endif
-            _fileLogService?.LogConversation(BASE_URL, question, response);
+            stopwatch.Stop();
+            _fileLogService?.LogConversation(npcName, question, response, stopwatch.ElapsedMilliseconds);
             _chatHistoryService?.PushChatItem(npcName, response);
             // This will cause a DivideByZeroException
             return new LLMResponse
@@ -93,8 +91,9 @@ public class LLMService : LogicOnlyService<LLMService>
         }
         catch (Exception ex)
         {
+            stopwatch.Stop();
             Debug.LogError($"LLMService: Error calling LLM API: {ex.Message}");
-            _fileLogService?.LogConversation(BASE_URL, question, ex.Message, "Error");
+            _fileLogService?.LogConversation(npcName, question, ex.Message, stopwatch.ElapsedMilliseconds, "Error");
             return new LLMResponse
             {
                 response = ex.Message,
