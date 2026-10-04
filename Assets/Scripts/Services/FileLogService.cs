@@ -27,6 +27,16 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
         Write("Info", $"LLM API call time: {elapsedMilliseconds} ms");
     }
 
+    public void LogConversation(string apiUrl, string question, string response, string level = "Chat")
+    {
+        Write(level, $"API: {apiUrl} | Question: {question} | Response: {response}");
+    }
+
+    public void LogToken(string token)
+    {
+        // Write("Token", token);
+    }
+
     private void Write(string level, string message)
     {
         if (string.IsNullOrEmpty(_logFilePath))

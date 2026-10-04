@@ -29,21 +29,29 @@ MonoBehaviour:
     npcSystem: "Ng\u01B0\u1EDDi \u0111\xE0n \xF4ng tr\u1EA7m t\xEDnh"
     startUpDialogue: "Ch\xE0o th\xE1m t\u1EED!"
     npcDescription: 
-    npcGuideChat: 
+    npcGuideChat: "M\u1ED9t ng\u01B0\u1EDDi h\xE0ng x\xF3m n\u01A1i v\u1EE5 \xE1n
+      x\u1EA3y ra"
   - npcName: Daniel
     npcSystem: "Ng\u01B0\u1EDDi qua \u0111\u01B0\u1EDDng"
     startUpDialogue: "\u1ED2 ch\xE0o \xF4ng"
-    npcDescription: 
+    npcDescription: "M\u1ED9t ng\u01B0\u1EDDi d\xE2n qua \u0111\u01B0\u1EDDng s\u1ED1ng
+      \u1EDF khu n\xE0y, \u0111\xE3 t\u1EEBng nghe qua v\u1EC1 v\u1EE5 \xE1n. B\u1EA1n
+      c\xF3 th\u1EC3 h\u1ECFi c\xE1c v\u1EA5n \u0111\u1EC1 li\xEAn quan \u0111\u1EBFn
+      v\u1EE5 \xE1n."
     npcGuideChat: 
   - npcName: Thomas
     npcSystem: "Ng\u01B0\u1EDDi qua \u0111\u01B0\u1EDDng n\xF3i nhi\u1EC1u"
     startUpDialogue: ...
-    npcDescription: 
+    npcDescription: "M\u1ED9t ng\u01B0\u1EDDi d\xE2n qua \u0111\u01B0\u1EDDng s\u1ED1ng
+      \u1EDF khu n\xE0y, \u0111\xE3 t\u1EEBng nghe qua v\u1EC1 v\u1EE5 \xE1n. B\u1EA1n
+      c\xF3 th\u1EC3 h\u1ECFi c\xE1c v\u1EA5n \u0111\u1EC1 li\xEAn quan \u0111\u1EBFn
+      v\u1EE5 \xE1n."
     npcGuideChat: 
   - npcName: Brad
     npcSystem: "Ng\u01B0\u1EDDi nhi\u1EC7t t\xECnh"
     startUpDialogue: ...
-    npcDescription: 
+    npcDescription: "B\u1EA1n th\xE2n c\u1EE7a Chris, b\u1EA1n c\xF3 th\u1EC3 h\u1ECFi
+      v\u1EC1 n\u1EA1n nh\xE2n"
     npcGuideChat: 
   - npcName: Johny
     npcSystem: "M\u1ED9t ng\u01B0\u1EDDi \u0111i tr\xEAn \u0111\u01B0\u1EDDng \u1EA5p

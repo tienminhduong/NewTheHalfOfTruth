@@ -127,6 +127,24 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
         return null;
     }
 
+    public void SaveCustomData(string key, string value)
+    {
+        _customDataDictionary ??= new Dictionary<string, string>();
+        _customDataDictionary[key] = value;
+
+        _playerSavedData.EnsureNonNullLists();
+        for (var index = 0; index < _playerSavedData.customData.Count; index++)
+        {
+            if (_playerSavedData.customData[index].key != key)
+                continue;
+
+            _playerSavedData.customData[index] = new CustomSavedData { key = key, value = value };
+            return;
+        }
+
+        _playerSavedData.customData.Add(new CustomSavedData { key = key, value = value });
+    }
+
     public bool HasInteractedWithNPC(string npcName)
     {
         return _interactedNPCs != null && _interactedNPCs.Contains(npcName);
@@ -151,6 +169,7 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
         if (!string.IsNullOrEmpty(savedDataJson))
         {
             _playerSavedData = JsonUtility.FromJson<PlayerSavedData>(savedDataJson);
+            _playerSavedData.EnsureNonNullLists();
 
             _notebookDataDictionary ??= new Dictionary<string, NotebookSavedData>();
             foreach (var notebookData in _playerSavedData.notebookData)

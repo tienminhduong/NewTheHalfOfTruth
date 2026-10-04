@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.UI;
 
@@ -33,7 +34,7 @@ public class SceneService : MonoBehaviourService<SceneService>
         }
     }
 
-    private SceneInstance activeSceneInstance;
+    private AsyncOperationHandle<SceneInstance> activeSceneHandle;
     private CD.LoadSceneData currentLoadSceneData;
     public CD.LoadSceneData CurrentLoadSceneData => currentLoadSceneData;
     public bool HasLoadData { get; private set; } = false;
@@ -69,11 +70,37 @@ public class SceneService : MonoBehaviourService<SceneService>
         InputHandler.FocusUIInput();
         if (cutsceneDataDict.TryGetValue(sceneAddress, out var cutsceneData))
             sceneAddress = cutsceneData.cutsceneAsset.RuntimeKey.ToString();
+
+        var prevSceneHandle = activeSceneHandle;
         var loadOperation = Addressables.LoadSceneAsync(sceneAddress);
-        activeSceneInstance = await loadOperation.Task;
+        activeSceneHandle = loadOperation;
+        await loadOperation.Task;
+
+        await UnloadActiveSceneAsync(prevSceneHandle);
 
         await sceneTransitionImage.DOFade(0, fadeDuration).AsyncWaitForCompletion();
         sceneTransitionImage.raycastTarget = false;
         InputHandler.FocusPlayerInput();
+    }
+
+    private async UniTask UnloadActiveSceneAsync(AsyncOperationHandle<SceneInstance> sceneHandle)
+    {
+        if (sceneHandle.IsValid())
+        {
+            var unloadOperation = Addressables.UnloadSceneAsync(sceneHandle);
+            await unloadOperation.Task;
+        }
+    }
+
+    public override void OnDestroy()
+    {
+        if (activeSceneHandle.IsValid())
+        {
+            var sceneHandle = activeSceneHandle;
+            activeSceneHandle = default;
+            Addressables.UnloadSceneAsync(sceneHandle);
+        }
+
+        base.OnDestroy();
     }
 }

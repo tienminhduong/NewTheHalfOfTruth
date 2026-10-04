@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 
 public class LLMService : LogicOnlyService<LLMService>
 {
-    private const string BASE_URL = "https://rag-jkoh.onrender.com/api/query/ask";
+    private const string BASE_URL = "https://rag-jkoh.onrender.com/api/query/ask-stream";
     private const string ERROR_MESSAGE = "Bạn hỏi gì thế tôi không hiểu??";
     public static event Action OnWeakPointHit;
 
@@ -54,9 +54,9 @@ public class LLMService : LogicOnlyService<LLMService>
     {
         LLMRequest requestData = new()
         {
-            npcName = npcName,
-            npcSystem = npcSystem,
-            question = question
+            NpcName = npcName,
+            NpcSystem = npcSystem,
+            Question = question
         };
         _chatHistoryService?.PushChatItem("player", question);
 
@@ -64,18 +64,25 @@ public class LLMService : LogicOnlyService<LLMService>
         try
         {
             Debug.Log($"LLMService: Sending request to LLM API with data: {jsonData}");
+            Action<string> tokenLogger = token =>
+            {
+                Debug.Log($"LLMService: Token received: {token}");
+                _fileLogService?.LogToken(token);
+                onTokenReceived?.Invoke(token);
+            };
 #if BENCHMARK_TIME
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 #else
 #endif
-            string response = await PostRequestAsync(BASE_URL, jsonData, onTokenReceived);
+            string response = await PostRequestAsync(BASE_URL, jsonData, tokenLogger);
 #if BENCHMARK_TIME
             stopwatch.Stop();
             Debug.Log($"LLMService: LLM API call time: {stopwatch.ElapsedMilliseconds} ms");
             _fileLogService?.LogBenchmarkTime(stopwatch.ElapsedMilliseconds);
 #else
 #endif
+            _fileLogService?.LogConversation(BASE_URL, question, response);
             _chatHistoryService?.PushChatItem(npcName, response);
             // This will cause a DivideByZeroException
             return new LLMResponse
@@ -87,6 +94,7 @@ public class LLMService : LogicOnlyService<LLMService>
         catch (Exception ex)
         {
             Debug.LogError($"LLMService: Error calling LLM API: {ex.Message}");
+            _fileLogService?.LogConversation(BASE_URL, question, ex.Message, "Error");
             return new LLMResponse
             {
                 response = ex.Message,
@@ -168,6 +176,7 @@ internal sealed class SseParser
 {
     private readonly List<byte> _lineBytes = new();
     private readonly StringBuilder _eventData = new();
+    private string _eventName;
     private bool _weakPointHitRaised;
 
     public void Append(byte[] chunk, StringBuilder responseBuilder, Action<string> onTokenReceived, Action onWeakPointHit)
@@ -206,11 +215,17 @@ internal sealed class SseParser
             return;
         }
 
+        if (line.StartsWith("event:", StringComparison.Ordinal))
+        {
+            _eventName = line.Substring("event:".Length).Trim();
+            return;
+        }
+
         if (line.StartsWith("data:", StringComparison.Ordinal))
         {
             if (_eventData.Length > 0)
                 _eventData.Append('\n');
-            _eventData.Append(line.Substring("data:".Length).TrimStart());
+            _eventData.Append(line.Substring("data:".Length).Trim());
         }
     }
 
@@ -221,28 +236,55 @@ internal sealed class SseParser
 
         var data = _eventData.ToString();
         _eventData.Clear();
-        if (data == "[DONE]")
+
+        if (string.IsNullOrEmpty(_eventName))
             return;
+
+        var eventName = _eventName;
+        _eventName = null;
+
+        if (data == "[DONE]" || string.Equals(eventName, "done", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        if (string.Equals(eventName, "meta", StringComparison.OrdinalIgnoreCase))
+        {
+            var streamEvent = JsonUtility.FromJson<LlmStreamEvent>(data);
+            if (streamEvent.weakPointHit && !_weakPointHitRaised)
+            {
+                _weakPointHitRaised = true;
+                onWeakPointHit?.Invoke();
+            }
+            return;
+        }
+
+        var token = ExtractToken(data);
+        if (string.IsNullOrEmpty(token))
+            return;
+
+        responseBuilder.Append(token);
+        onTokenReceived?.Invoke(token);
+    }
+
+    private static string ExtractToken(string data)
+    {
+        if (string.IsNullOrWhiteSpace(data))
+            return string.Empty;
 
         var streamEvent = JsonUtility.FromJson<LlmStreamEvent>(data);
-        if (streamEvent.weakPointHit && !_weakPointHitRaised)
-        {
-            _weakPointHitRaised = true;
-            onWeakPointHit?.Invoke();
-        }
-        if (string.IsNullOrEmpty(streamEvent.token))
-            return;
+        if (!string.IsNullOrEmpty(streamEvent.text))
+            return streamEvent.text;
+        if (!string.IsNullOrEmpty(streamEvent.token))
+            return streamEvent.token;
 
-        responseBuilder.Append(streamEvent.token);
-        onTokenReceived?.Invoke(streamEvent.token);
+        return string.Empty;
     }
 }
 
 public struct LLMRequest
 {
-    public string npcName;
-    public string npcSystem;
-    public string question;
+    public string NpcName;
+    public string NpcSystem;
+    public string Question;
 }
 
 public struct LLMResponse
@@ -264,6 +306,7 @@ public struct LlmApiResponse
 
 public struct LlmStreamEvent
 {
+    public string text;
     public string token;
     public bool weakPointHit;
 }

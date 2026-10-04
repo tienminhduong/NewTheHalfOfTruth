@@ -147,6 +147,7 @@ public class ChatUISystem : BaseUIPanelSystem
 
     private void ReturnChatBubbleToPool(ChatBubble chatBubble)
     {
+        _activeChatBubbles.Remove(chatBubble);
         Destroy(chatBubble.gameObject);
     }
 
@@ -159,8 +160,9 @@ public class ChatUISystem : BaseUIPanelSystem
 
     private void HandleDisabled()
     {
-        foreach (var chatBubble in _activeChatBubbles)
+        for (var index = _activeChatBubbles.Count - 1; index >= 0; index--)
         {
+            var chatBubble = _activeChatBubbles[index];
             if (chatBubble != null)
                 ReturnChatBubbleToPool(chatBubble);
         }
@@ -215,7 +217,7 @@ public class ChatUISystem : BaseUIPanelSystem
 
         var system = _npcDatabase.GetNPCData(_currentNPCName.NpcName).npcSystem;
         _isWaitingForLLMResponse = true;
-
+        ResetStreamingResponseState();
 
         _llmService?.CallLLMAsync(_currentNPCName.NpcName, system, playerInput, AppendStreamingResponse)
             .ContinueWith(HandleLLMCallCompleted)
@@ -247,12 +249,23 @@ public class ChatUISystem : BaseUIPanelSystem
             _thinkingTimer.IsRunning = false;
         }
 
-        if (response.status != LLMResponse.Status.Success && _streamingResponseBubble != null)
+        if (response.status == LLMResponse.Status.Success && _streamingResponseBubble != null)
+        {
+            _streamingResponseBubble.SetText(response.response);
+            _streamingResponseBubble.ForceUpdateLayout();
+            ResetStreamingResponseState();
+        }
+        else if (response.status != LLMResponse.Status.Success && _streamingResponseBubble != null)
         {
             ReturnChatBubbleToPool(_streamingResponseBubble);
-            _streamingResponseBubble = null;
-            _streamingResponseText = string.Empty;
+            ResetStreamingResponseState();
         }
+    }
+
+    private void ResetStreamingResponseState()
+    {
+        _streamingResponseBubble = null;
+        _streamingResponseText = string.Empty;
     }
 
     private void Update()

@@ -31,6 +31,11 @@ public class Bootstrapper : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        ServiceLocator.RemoveServiceCallback<SceneService>(LoadScene);
+    }
+
     #region LOAD BOOTSTRAPPER BEFORE SCENE LOAD
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void LoadBootstrapper()
