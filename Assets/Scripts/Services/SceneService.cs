@@ -26,7 +26,7 @@ public class SceneService : MonoBehaviourService<SceneService>
     {
         base.Awake();
 
-        _fileLogService = ServiceLocator.GetService<FileLogService>();
+        ServiceLocator.TryOrWaitForService<FileLogService>(HandleFileLogService);
 
         foreach (var cutsceneData in cutsceneDataList)
         {
@@ -39,6 +39,17 @@ public class SceneService : MonoBehaviourService<SceneService>
                 Debug.LogWarning($"Duplicate scene trigger address found: {cutsceneData.sceneTriggerAddress}. Only the first occurrence will be used.");
             }
         }
+    }
+
+    private void HandleFileLogService(IService service)
+    {
+        if (service is not FileLogService fileLogService)
+        {
+            Debug.LogError($"ServiceLocator returned a service of type {service.GetType()} instead of FileLogService.");
+            return;
+        }
+
+        _fileLogService = fileLogService;
     }
 
     private AsyncOperationHandle<SceneInstance> activeSceneHandle;
@@ -120,6 +131,8 @@ public class SceneService : MonoBehaviourService<SceneService>
 
     public override void OnDestroy()
     {
+        ServiceLocator.RemoveServiceCallback<FileLogService>(HandleFileLogService);
+
         if (activeSceneHandle.IsValid())
         {
             var sceneHandle = activeSceneHandle;

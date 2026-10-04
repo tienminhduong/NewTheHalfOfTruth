@@ -9,11 +9,15 @@ using UnityEngine.Networking;
 public sealed class FileLogService : LogicOnlyService<FileLogService>
 {
     private const string LogFileName = "game.log";
+    private const string SessionKeyPlayerPrefsKey = "FileLogService.SessionKey";
     private const string GoogleFormResponseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdPEzQrAuognEcZLi7KGNzfjALBexlPVl887V4IQBg4cf_qfg/formResponse";
+    private const string GoogleFormSessionEntry = "entry.2070173541";
     private const string GoogleFormLogEntry = "entry.207076898";
 
     private string _logFilePath;
     private readonly object _writeLock = new();
+    private bool _automaticUploadStarted;
+    public string SessionKey { get; private set; }
 
     public override void Awake()
     {
@@ -24,6 +28,25 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
 
         Directory.CreateDirectory(logsDirectory);
         _logFilePath = Path.Combine(logsDirectory, LogFileName);
+
+    }
+
+    public void EnsureSessionKey()
+    {
+        if (!string.IsNullOrEmpty(SessionKey))
+            return;
+
+        SessionKey = PlayerPrefs.GetString(SessionKeyPlayerPrefsKey, string.Empty);
+        if (!string.IsNullOrEmpty(SessionKey))
+        {
+            Debug.Log($"FileLogService: Resuming session {SessionKey}");
+            return;
+        }
+
+        SessionKey = Guid.NewGuid().ToString("N");
+        PlayerPrefs.SetString(SessionKeyPlayerPrefsKey, SessionKey);
+        PlayerPrefs.Save();
+        Debug.Log($"FileLogService: Started session {SessionKey}");
     }
 
     public void LogBenchmarkTime(long elapsedMilliseconds)
@@ -43,10 +66,25 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
 
     public async UniTask<bool> UploadLogToGoogleFormAsync()
     {
-        return await UploadLogFileToGoogleFormAsync(_logFilePath);
+        if (_automaticUploadStarted)
+            return false;
+
+        if (string.IsNullOrEmpty(SessionKey))
+        {
+            Debug.LogWarning("FileLogService: No active game session. Skipping log upload.");
+            return false;
+        }
+
+        _automaticUploadStarted = true;
+        return await UploadLogFileToGoogleFormAsync(_logFilePath, SessionKey);
     }
 
-    public static async UniTask<bool> UploadLogFileToGoogleFormAsync(string logFilePath)
+    public void UploadLogOnApplicationQuit()
+    {
+        UploadLogToGoogleFormAsync().Forget();
+    }
+
+    public static async UniTask<bool> UploadLogFileToGoogleFormAsync(string logFilePath, string sessionKey = null)
     {
         string log;
         try
@@ -57,7 +95,7 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
                 return false;
             }
 
-            log = File.ReadAllText(logFilePath, Encoding.UTF8);
+            log = File.ReadAllText(logFilePath, Encoding.UTF8).TrimEnd('\r', '\n');
         }
         catch (Exception exception)
         {
@@ -66,6 +104,7 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
         }
 
         var form = new WWWForm();
+        form.AddField(GoogleFormSessionEntry, sessionKey ?? PlayerPrefs.GetString(SessionKeyPlayerPrefsKey, string.Empty));
         form.AddField(GoogleFormLogEntry, log);
         using var request = UnityWebRequest.Post(GoogleFormResponseUrl, form);
         try

@@ -58,6 +58,7 @@ Read this file at the beginning of every task in this repository. Use [README.md
 - Preserve chunk-safe parsing: network chunks can split at arbitrary byte or line boundaries.
 - Keep `weakPointHit` handling separate from token accumulation and ensure token callbacks remain incremental.
 - Do not log secrets or sensitive user content unnecessarily. Follow the existing `FileLogService` behavior when changing diagnostics.
+- `MainMenu` initializes the log session when Start Game is clicked: reuse `FileLogService.SessionKey` from PlayerPrefs when present, otherwise create and persist a new GUID. The key is included with Google Forms log uploads. Endgame upload is reliable; application-quit and Unity Editor Play Mode stop uploads may be interrupted by browser/editor teardown on Web/itch.io builds.
 
 ## Validation
 

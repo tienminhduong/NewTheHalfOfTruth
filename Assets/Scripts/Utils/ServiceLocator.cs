@@ -70,6 +70,18 @@ public static class ServiceLocator
         }
     }
 
+    public static bool TryGetService<T>(out T service) where T : IService
+    {
+        if (services.TryGetValue(typeof(T), out var registeredService))
+        {
+            service = (T)registeredService;
+            return true;
+        }
+
+        service = default;
+        return false;
+    }
+
     public static void UnregisterService<T>(T service) where T : IService
     {
         var type = typeof(T);

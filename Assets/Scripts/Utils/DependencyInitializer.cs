@@ -7,12 +7,14 @@ public class DependencyInitializer : Singleton<DependencyInitializer>
     [SerializeField] private NPCDatabase _npcDatabase;
     [SerializeField] private bool _loadFromPrefs = true;
     private readonly List<IService> _logicOnlyServices = new();
+    private FileLogService _fileLogService;
 
     protected override void Awake()
     {
         base.Awake();
 
-        _logicOnlyServices.Add(new FileLogService());
+        _fileLogService = new FileLogService();
+        _logicOnlyServices.Add(_fileLogService);
         _logicOnlyServices.Add(new SavedDataService(_evidenceDatabase, _loadFromPrefs));
         _logicOnlyServices.Add(new ChatHistoryService(_loadFromPrefs));
         _logicOnlyServices.Add(new LLMService());
@@ -25,5 +27,10 @@ public class DependencyInitializer : Singleton<DependencyInitializer>
     {
         foreach (var service in _logicOnlyServices)
             service.OnDestroy();
+    }
+
+    private void OnApplicationQuit()
+    {
+        _fileLogService?.UploadLogOnApplicationQuit();
     }
 }

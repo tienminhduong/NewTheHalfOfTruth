@@ -4,6 +4,7 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] private BaseUIButton startButton;
     private SceneService _sceneService;
+    private FileLogService _fileLogService;
 
     private void HandleSceneService(IService service)
     {
@@ -19,13 +20,26 @@ public class MainMenu : MonoBehaviour
     void OnEnable()
     {
         ServiceLocator.TryOrWaitForService<SceneService>(HandleSceneService);
+        ServiceLocator.TryOrWaitForService<FileLogService>(HandleFileLogService);
         startButton.AddListener(HandleStartButtonClick);
     }
 
     void OnDisable()
     {
         ServiceLocator.RemoveServiceCallback<SceneService>(HandleSceneService);
+        ServiceLocator.RemoveServiceCallback<FileLogService>(HandleFileLogService);
         startButton.RemoveListener(HandleStartButtonClick);
+    }
+
+    private void HandleFileLogService(IService service)
+    {
+        if (service is not FileLogService fileLogService)
+        {
+            Debug.LogError($"ServiceLocator returned a service of type {service.GetType()} instead of FileLogService.");
+            return;
+        }
+
+        _fileLogService = fileLogService;
     }
 
     private void HandleStartButtonClick()
@@ -35,6 +49,7 @@ public class MainMenu : MonoBehaviour
             return;
         }
 
+        _fileLogService?.EnsureSessionKey();
         _sceneService.TransitionToScene("Assets/Scenes/StartRoad.unity");
     }
 }
