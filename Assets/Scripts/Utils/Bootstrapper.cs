@@ -36,6 +36,7 @@ public class Bootstrapper : MonoBehaviour
         ServiceLocator.RemoveServiceCallback<SceneService>(LoadScene);
     }
 
+#if UNITY_EDITOR
     #region LOAD BOOTSTRAPPER BEFORE SCENE LOAD
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void LoadBootstrapper()
@@ -43,4 +44,5 @@ public class Bootstrapper : MonoBehaviour
         SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
     }
     #endregion
+#endif
 }

@@ -29,6 +29,7 @@ public class BaseUIButton : MonoBehaviour
     {
         if (_button == null)
             return;
+        Debug.Log($"Adding listener to button: {action.Method.Name}");
         _button.onClick.AddListener(action);
     }
 

@@ -22,6 +22,7 @@ public class MainMenu : MonoBehaviour
         ServiceLocator.TryOrWaitForService<SceneService>(HandleSceneService);
         ServiceLocator.TryOrWaitForService<FileLogService>(HandleFileLogService);
         startButton.AddListener(HandleStartButtonClick);
+        Debug.Log("MainMenu enabled and listeners added.");
     }
 
     void OnDisable()
@@ -46,8 +47,11 @@ public class MainMenu : MonoBehaviour
     {
         if (_sceneService == null)
         {
+            Debug.LogError("SceneService is not available. Cannot transition to StartRoad scene.");
             return;
         }
+
+        Debug.Log("Start button clicked. Transitioning to StartRoad scene.");
 
         _fileLogService?.EnsureSessionKey();
         _sceneService.TransitionToScene("Assets/Scenes/StartRoad.unity");

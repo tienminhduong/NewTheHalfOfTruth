@@ -4582,11 +4582,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!20 &1561921730 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 2628611193517547932, guid: bbef5502b6a7cf1458379ec15fe4b07a, type: 3}
-  m_PrefabInstance: {fileID: 1033948744127738593}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1604622492
 GameObject:
   m_ObjectHideFlags: 0
@@ -6123,10 +6118,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 6306975134657252457, guid: 79e8e110f5b747f4e8616c94b9a194dc, type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 1561921730}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

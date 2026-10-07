@@ -128,14 +128,14 @@ public class NotebookUISystem : BaseUIPanelSystem
             _currentPageIndex = Mathf.Max(0, _evidenceKeysCollected.Count - pages.Length);
 
         if (_currentPageIndex < _evidenceKeysCollected.Count - pages.Length)
-            _rightPageButton.SetInteractable(true);
+            _rightPageButton.gameObject.SetActive(true);
         else
-            _rightPageButton.SetInteractable(false);
+            _rightPageButton.gameObject.SetActive(false);
 
         if (_currentPageIndex <= 0)
-            _leftPageButton.SetInteractable(false);
+            _leftPageButton.gameObject.SetActive(false);
         else
-            _leftPageButton.SetInteractable(true);
+            _leftPageButton.gameObject.SetActive(true);
     }
 
     override protected void OpenPanel()
