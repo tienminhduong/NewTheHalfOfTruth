@@ -8,6 +8,7 @@ public class InputHandler : MonoBehaviour, IPlayerActions, IUIActions
 {
     public static event Action<Vector2> Move;
     public static event Action Interact;
+    public static event Action Cancel;
 
     /// <summary>
     /// bool parameter indicates whether the focus is on UI (true) or Player (false).
@@ -68,7 +69,13 @@ public class InputHandler : MonoBehaviour, IPlayerActions, IUIActions
         }
     }
 
-    public void OnCancel(InputAction.CallbackContext context) { }
+    public void OnCancel(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Cancel?.Invoke();
+        }
+    }
     public void OnClick(InputAction.CallbackContext context) { }
     public void OnInteract(InputAction.CallbackContext context)
     {

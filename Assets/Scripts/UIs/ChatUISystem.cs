@@ -155,7 +155,9 @@ public class ChatUISystem : BaseUIPanelSystem
     {
         if (_isWaitingForLLMResponse)
             return;
+
         _llmService?.ReleaseChat();
+        base.ClosePanel();
     }
 
     private void HandleDisabled()

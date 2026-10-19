@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class Bootstrapper : MonoBehaviour
 {
+    private const string BootstrapperSceneName = "Bootstrapper";
+
     [SerializeField] private bool loadSceneOnStart = false;
 
     [ShowIf(nameof(loadSceneOnStart), true)]
@@ -41,6 +43,11 @@ public class Bootstrapper : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void LoadBootstrapper()
     {
+        if (SceneManager.GetActiveScene().name == BootstrapperSceneName)
+        {
+            return;
+        }
+
         SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
     }
     #endregion

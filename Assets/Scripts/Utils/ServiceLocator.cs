@@ -10,20 +10,25 @@ public static class ServiceLocator
     public static void RegisterService<T>(T service) where T : IService
     {
         var type = typeof(T);
-        if (!services.ContainsKey(type))
+        // if (!services.ContainsKey(type))
         {
+            if (services.ContainsKey(type))
+            {
+                Debug.LogWarning($"Service of type {type} is already registered. Overwriting the existing service.");
+            }
+
             services[type] = service;
             if (waitingOnInitCallbacks.TryGetValue(type, out var callback))
             {
                 callback?.Invoke(service);
                 waitingOnInitCallbacks.Remove(type);
             }
-            Debug.Log($"Service of type {type} registered successfully.");
+            // Debug.Log($"Service of type {type} registered successfully.");
         }
-        else
-        {
-            Debug.LogWarning($"Service of type {type} is already registered.");
-        }
+        // else
+        // {
+        //     Debug.LogWarning($"Service of type {type} is already registered.");
+        // }
     }
 
     public static void TryOrWaitForService<T>(Action<IService> callback = null) where T : IService
@@ -85,7 +90,7 @@ public static class ServiceLocator
     public static void UnregisterService<T>(T service) where T : IService
     {
         var type = typeof(T);
-        if (services.ContainsKey(type))
+        if (services.ContainsKey(type) && services[type] == (IService)service)
         {
             services.Remove(type);
         }

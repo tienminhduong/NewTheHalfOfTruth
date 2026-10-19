@@ -7,7 +7,9 @@ using UnityEngine.Networking;
 
 public class LLMService : LogicOnlyService<LLMService>
 {
-    private const string BASE_URL = "https://rag-jkoh.onrender.com/api/query/ask-stream";
+    private const string BASE_URL = "https://rag-streaming-faiss.onrender.com/api/query/ask-stream";
+    private const string COMPACT_HISTORY_URL = "https://rag-streaming-faiss.onrender.com/api/query/compact-history";
+    private const int COMPACT_HISTORY_LINE_COUNT = 10;
     private const string ERROR_MESSAGE = "Bạn hỏi gì thế tôi không hiểu??";
     public static event Action OnWeakPointHit;
 
@@ -52,11 +54,32 @@ public class LLMService : LogicOnlyService<LLMService>
 
     public async UniTask<LLMResponse> CallLLMAsync(string npcName = "", string npcSystem = "", string question = "", Action<string> onTokenReceived = null)
     {
+        var requestHistory = new List<ChatRequestItem>();
+        var summary = string.Empty;
+        if (_chatHistoryService != null &&
+            _chatHistoryService.TryGetChatHistory(npcName, out var chatHistory))
+        {
+            summary = chatHistory.summary;
+            if (chatHistory.chatItems != null)
+            {
+                foreach (var chatItem in chatHistory.chatItems)
+                {
+                    requestHistory.Add(new ChatRequestItem
+                    {
+                        role = chatItem.personKey,
+                        content = chatItem.message
+                    });
+                }
+            }
+        }
+
         LLMRequest requestData = new()
         {
-            NpcName = npcName,
-            NpcSystem = npcSystem,
-            Question = question
+            npcName = npcName,
+            npcSystem = npcSystem,
+            question = question,
+            summary = summary,
+            history = requestHistory
         };
         _chatHistoryService?.PushChatItem("player", question);
 
@@ -82,6 +105,7 @@ public class LLMService : LogicOnlyService<LLMService>
             stopwatch.Stop();
             _fileLogService?.LogConversation(npcName, question, response, stopwatch.ElapsedMilliseconds);
             _chatHistoryService?.PushChatItem(npcName, response);
+            await CompactHistoryIfNeededAsync(npcName);
             // This will cause a DivideByZeroException
             return new LLMResponse
             {
@@ -100,6 +124,79 @@ public class LLMService : LogicOnlyService<LLMService>
                 status = LLMResponse.Status.Error
             };
         }
+    }
+
+    private async UniTask CompactHistoryIfNeededAsync(string npcName)
+    {
+        if (_chatHistoryService == null ||
+            !_chatHistoryService.TryGetChatHistory(npcName, out var chatHistory) ||
+            chatHistory.chatItems == null ||
+            chatHistory.chatItems.Count < COMPACT_HISTORY_LINE_COUNT)
+        {
+            return;
+        }
+
+        var requestData = new CompactHistoryRequest
+        {
+            npcName = npcName,
+            history = new List<CompactHistoryItem>()
+        };
+
+        foreach (var chatItem in chatHistory.chatItems)
+        {
+            requestData.history.Add(new CompactHistoryItem
+            {
+                role = chatItem.personKey,
+                content = chatItem.message
+            });
+        }
+
+        string jsonData = JsonUtility.ToJson(requestData);
+        try
+        {
+            Debug.Log($"LLMService: Compacting chat history for NPC '{npcName}'.");
+            string compactSummary = await PostCompactHistoryRequestAsync(COMPACT_HISTORY_URL, jsonData);
+            _chatHistoryService.ReplaceChatHistory(npcName, compactSummary);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"LLMService: Error compacting chat history: {ex.Message}");
+        }
+    }
+
+    private static async UniTask<string> PostCompactHistoryRequestAsync(string url, string json)
+    {
+        using var request = new UnityWebRequest(url, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.SetRequestHeader("Accept", "application/json");
+
+        await request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+            throw new InvalidOperationException(request.error ?? ERROR_MESSAGE);
+
+        string responseText = request.downloadHandler.text?.Trim();
+        if (string.IsNullOrWhiteSpace(responseText))
+            throw new InvalidOperationException("Compact history endpoint returned an empty response.");
+
+        if (responseText.StartsWith("{", StringComparison.Ordinal))
+        {
+            var response = JsonUtility.FromJson<CompactHistoryResponse>(responseText);
+            responseText = response.summary;
+        }
+        else if (responseText.StartsWith("\"", StringComparison.Ordinal))
+        {
+            responseText = JsonUtility.FromJson<CompactHistoryStringResponse>(
+                $"{{\"value\":{responseText}}}").value;
+        }
+
+        if (string.IsNullOrWhiteSpace(responseText))
+            throw new InvalidOperationException("Compact history endpoint returned an empty summary.");
+
+        return responseText;
     }
 
     private async UniTask<string> PostRequestAsync(string url, string json, Action<string> onTokenReceived)
@@ -281,9 +378,44 @@ internal sealed class SseParser
 
 public struct LLMRequest
 {
-    public string NpcName;
-    public string NpcSystem;
-    public string Question;
+    public string npcName;
+    public string npcSystem;
+    public string question;
+    public string summary;
+    public List<ChatRequestItem> history;
+}
+
+[Serializable]
+public struct ChatRequestItem
+{
+    public string role;
+    public string content;
+}
+
+[Serializable]
+public class CompactHistoryRequest
+{
+    public string npcName;
+    public List<CompactHistoryItem> history;
+}
+
+[Serializable]
+public struct CompactHistoryItem
+{
+    public string role;
+    public string content;
+}
+
+[Serializable]
+public struct CompactHistoryResponse
+{
+    public string summary;
+}
+
+[Serializable]
+public struct CompactHistoryStringResponse
+{
+    public string value;
 }
 
 public struct LLMResponse

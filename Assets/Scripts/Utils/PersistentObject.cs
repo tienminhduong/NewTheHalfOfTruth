@@ -1,11 +1,17 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PersistentObject : Singleton<PersistentObject>
+public class PersistentObject : MonoBehaviour
 {
-    override protected void Awake()
+    public static PersistentObject Instance { get; private set; }
+    void Awake()
     {
-        base.Awake();
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
         DontDestroyOnLoad(gameObject);
     }
 }

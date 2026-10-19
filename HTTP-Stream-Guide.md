@@ -11,6 +11,8 @@ The main implementation is in `Assets/Scripts/Services/LLMService.cs`.
 - `npcName`
 - `npcSystem`
 - `question`
+- `summary`
+- `history`
 
 Then it serializes the data with `JsonUtility.ToJson(...)` and sends it to the backend endpoint:
 
@@ -18,16 +20,26 @@ Then it serializes the data with `JsonUtility.ToJson(...)` and sends it to the b
 private const string BASE_URL = "https://rag-jkoh.onrender.com/api/query/ask-stream";
 ```
 
-The actual request payload must use PascalCase fields, because the backend validates `NpcName`, `NpcSystem`, and `Question`:
+The request payload uses lowercase fields and includes the previous compact summary plus the un-compacted chat items:
 
 ```csharp
 public struct LLMRequest
 {
-    public string NpcName;
-    public string NpcSystem;
-    public string Question;
+    public string npcName;
+    public string npcSystem;
+    public string question;
+    public string summary;
+    public List<ChatRequestItem> history;
+}
+
+public struct ChatRequestItem
+{
+    public string role;
+    public string content;
 }
 ```
+
+The current question remains in `question` and is not duplicated in `history`.
 
 The actual request is sent via `UnityWebRequest`:
 
@@ -284,7 +296,30 @@ return new LLMResponse
 };
 ```
 
-## 9. In practice: how the UI receives live text
+## 9. Compacting long chat histories
+
+After a conversation reaches 10 chat items, `LLMService` sends the complete local history to:
+
+```text
+POST https://rag-jkoh.onrender.com/api/query/compact-history
+Content-Type: application/json
+```
+
+The compact request uses the lowercase JSON fields expected by this endpoint:
+
+```json
+{
+  "npcName": "Johny",
+  "history": [
+    { "role": "player", "content": "Chào ông Johny." },
+    { "role": "npc", "content": "Chào. Có chuyện gì?" }
+  ]
+}
+```
+
+The endpoint response is treated as a summary string. When the request succeeds, the local history for that NPC is replaced with the summary and an empty list of chat items. Subsequent requests send that summary together with only the new chat items. If the request fails or returns an empty summary, the original history is kept and the error is logged.
+
+## 10. In practice: how the UI receives live text
 
 When the game asks the LLM a question, it calls something like:
 
@@ -301,7 +336,7 @@ The callback `onTokenReceived` is invoked for each token as soon as it arrives, 
 
 This is why the chat text appears to “type” in real time instead of waiting for a full reply.
 
-## 10. Real stream result observed from Postman
+## 11. Real stream result observed from Postman
 
 The actual network result from the backend matches this pattern. In Postman, the response is not a single JSON block; it is a sequence of streamed events.
 

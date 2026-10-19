@@ -21,14 +21,24 @@ public class BaseUIPanelSystem : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        InputHandler.Cancel += HandleCancel;
+
         if (_closeButton != null)
             _closeButton.onClick.AddListener(ClosePanel);
     }
 
     protected virtual void OnDisable()
     {
+        InputHandler.Cancel -= HandleCancel;
+
         if (_closeButton != null)
             _closeButton.onClick.RemoveListener(ClosePanel);
+    }
+
+    private void HandleCancel()
+    {
+        if (IsPanelOpen)
+            ClosePanel();
     }
 
     protected virtual void ClosePanel()

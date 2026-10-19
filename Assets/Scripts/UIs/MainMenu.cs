@@ -22,6 +22,14 @@ public class MainMenu : MonoBehaviour
         ServiceLocator.TryOrWaitForService<SceneService>(HandleSceneService);
         ServiceLocator.TryOrWaitForService<FileLogService>(HandleFileLogService);
         startButton.AddListener(HandleStartButtonClick);
+        if (startButton == null)
+        {
+            Debug.LogError("Start button is not assigned in the inspector.");
+        }
+        else
+        {
+            Debug.Log("Start button is assigned and listener added.");
+        }
         Debug.Log("MainMenu enabled and listeners added.");
     }
 
@@ -30,6 +38,15 @@ public class MainMenu : MonoBehaviour
         ServiceLocator.RemoveServiceCallback<SceneService>(HandleSceneService);
         ServiceLocator.RemoveServiceCallback<FileLogService>(HandleFileLogService);
         startButton.RemoveListener(HandleStartButtonClick);
+        if (startButton == null)
+        {
+            Debug.LogError("Start button is not assigned in the inspector.");
+        }
+        else
+        {
+            Debug.Log("Start button listener removed.");
+        }
+        Debug.Log("MainMenu disabled and listeners removed.");
     }
 
     private void HandleFileLogService(IService service)

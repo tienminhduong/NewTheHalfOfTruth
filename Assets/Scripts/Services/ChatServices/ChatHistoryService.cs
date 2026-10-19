@@ -73,6 +73,45 @@ public class ChatHistoryService : BaseSaveLoadService<ChatHistoryService>
         ChatEvents.OnChatItemPushed?.Invoke(chatItem);
     }
 
+    public void ReplaceActiveChatHistory(string summary)
+    {
+        if (ActiveChatNpc == null)
+        {
+            Debug.LogWarning("No active chat key set. Cannot replace chat history.");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(summary))
+        {
+            Debug.LogError("Cannot replace chat history with an empty compact summary.");
+            return;
+        }
+
+        ReplaceChatHistory(ActiveChatNpc.NpcName, summary);
+    }
+
+    public void ReplaceChatHistory(string key, string summary)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            Debug.LogError("Cannot replace chat history with an empty key.");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(summary))
+        {
+            Debug.LogError("Cannot replace chat history with an empty compact summary.");
+            return;
+        }
+
+        _chatHistories[key] = new ChatHistory
+        {
+            key = key,
+            summary = summary,
+            chatItems = new List<ChatItem>()
+        };
+    }
+
     public ChatHistoryService(bool loadFromPrefs) : base(loadFromPrefs)
     {
     }
@@ -107,6 +146,7 @@ public class ChatHistoryService : BaseSaveLoadService<ChatHistoryService>
 public struct ChatHistory
 {
     public string key;
+    public string summary;
     public List<ChatItem> chatItems;
 
     public void EnsureNotNull()

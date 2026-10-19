@@ -98,11 +98,8 @@ public class DialogueUISystem : BaseUIPanelSystem
     {
         if (_isWaitingForLLMResponse)
             return;
-        if (dialogueText.IsTyping)
-        {
-            dialogueText.EndCurrentDialogue();
-            return;
-        }
+
+        dialogueText.EndCurrentDialogue();
         base.ClosePanel();
         if (_currentChatNpc != null)
         {

@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityExtensions;
 
 [RequireComponent(typeof(Button))]
 public class BaseUIButton : MonoBehaviour
 {
-    private Button _button;
+    [SerializeField] private Button _button;
 
     void OnValidate()
     {
@@ -27,9 +28,8 @@ public class BaseUIButton : MonoBehaviour
 
     public void AddListener(UnityAction action)
     {
-        if (_button == null)
-            return;
-        Debug.Log($"Adding listener to button: {action.Method.Name}");
+        gameObject.EnsureComponent(ref _button);
+        // Debug.Log($"Adding listener to button: {action.Method.Name}");
         _button.onClick.AddListener(action);
     }
 
@@ -37,6 +37,7 @@ public class BaseUIButton : MonoBehaviour
     {
         if (_button == null)
             return;
+        // Debug.Log($"Removing listener from button: {action.Method.Name}");
         _button.onClick.RemoveListener(action);
     }
 }
