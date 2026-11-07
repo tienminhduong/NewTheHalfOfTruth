@@ -66,7 +66,7 @@ public class LLMService : LogicOnlyService<LLMService>
                 {
                     requestHistory.Add(new ChatRequestItem
                     {
-                        role = chatItem.personKey,
+                        role = GetRequestRole(chatItem.personKey),
                         content = chatItem.message
                     });
                 }
@@ -104,6 +104,7 @@ public class LLMService : LogicOnlyService<LLMService>
 #endif
             stopwatch.Stop();
             _fileLogService?.LogConversation(npcName, question, response, stopwatch.ElapsedMilliseconds);
+            _fileLogService?.SubmitConversationToGoogleForm(npcName, question, response);
             _chatHistoryService?.PushChatItem(npcName, response);
             await CompactHistoryIfNeededAsync(npcName);
             // This will cause a DivideByZeroException
@@ -146,7 +147,7 @@ public class LLMService : LogicOnlyService<LLMService>
         {
             requestData.history.Add(new CompactHistoryItem
             {
-                role = chatItem.personKey,
+                role = GetRequestRole(chatItem.personKey),
                 content = chatItem.message
             });
         }
@@ -162,6 +163,11 @@ public class LLMService : LogicOnlyService<LLMService>
         {
             Debug.LogError($"LLMService: Error compacting chat history: {ex.Message}");
         }
+    }
+
+    private static string GetRequestRole(string personKey)
+    {
+        return personKey == "player" ? "player" : "npc";
     }
 
     private static async UniTask<string> PostCompactHistoryRequestAsync(string url, string json)

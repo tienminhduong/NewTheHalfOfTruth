@@ -61,6 +61,8 @@ public class Player : MonoBehaviour, IHuman
 
     void Start()
     {
+        gameObject.EnsureComponent(ref _animator, true);
+        gameObject.EnsureComponent(ref _spriteRenderer, true);
         _animSystem = new HumanAnimSystem(_animator, _animRefs, _faceDirOnLoad);
     }
 

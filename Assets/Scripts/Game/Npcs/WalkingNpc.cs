@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityExtensions;
 
 [RequireComponent(typeof(Animator))]
 public class WalkingNpc : MonoBehaviour
@@ -23,6 +24,7 @@ public class WalkingNpc : MonoBehaviour
     void Start()
     {
         var facingDirection = movingDirection.x > 0 ? CD.FaceDir.Right : CD.FaceDir.Left;
+        gameObject.EnsureComponent(ref animator, true);
         animationSystem = new HumanAnimSystem(animator, animationReferences, facingDirection, CD.HumanState.Walk);
     }
 

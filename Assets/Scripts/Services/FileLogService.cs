@@ -64,6 +64,18 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
         // Write("Token", token);
     }
 
+    public void SubmitConversationToGoogleForm(string npcName, string question, string response)
+    {
+        EnsureSessionKey();
+        SubmitConversationToGoogleFormAsync(npcName, question, response).Forget();
+    }
+
+    private async UniTask SubmitConversationToGoogleFormAsync(string npcName, string question, string response)
+    {
+        var conversation = $"NpcName: {npcName} | Question: {question} | Response: {response}";
+        await PostToGoogleFormAsync(conversation, SessionKey, "conversation");
+    }
+
     public async UniTask<bool> UploadLogToGoogleFormAsync()
     {
         if (_automaticUploadStarted)
@@ -103,8 +115,13 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
             return false;
         }
 
+        return await PostToGoogleFormAsync(log, sessionKey ?? PlayerPrefs.GetString(SessionKeyPlayerPrefsKey, string.Empty), "log");
+    }
+
+    private static async UniTask<bool> PostToGoogleFormAsync(string log, string sessionKey, string uploadType)
+    {
         var form = new WWWForm();
-        form.AddField(GoogleFormSessionEntry, sessionKey ?? PlayerPrefs.GetString(SessionKeyPlayerPrefsKey, string.Empty));
+        form.AddField(GoogleFormSessionEntry, sessionKey);
         form.AddField(GoogleFormLogEntry, log);
         using var request = UnityWebRequest.Post(GoogleFormResponseUrl, form);
         try
@@ -113,17 +130,17 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
 
             if (request.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError($"FileLogService: Could not upload log to Google Forms: {request.error}");
+                Debug.LogError($"FileLogService: Could not upload {uploadType} to Google Forms: {request.error}");
                 return false;
             }
         }
         catch (Exception exception)
         {
-            Debug.LogError($"FileLogService: Google Forms upload failed: {exception.Message}");
+            Debug.LogError($"FileLogService: Google Forms {uploadType} upload failed: {exception.Message}");
             return false;
         }
 
-        Debug.Log("FileLogService: Log uploaded to Google Forms.");
+        Debug.Log($"FileLogService: {uploadType} uploaded to Google Forms.");
         return true;
     }
 

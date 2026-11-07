@@ -2,6 +2,7 @@ using TMPro;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityExtensions;
 
 public class ChatBubble : MonoBehaviour
 {
@@ -18,14 +19,8 @@ public class ChatBubble : MonoBehaviour
 
     public void SetText(string text)
     {
-        if (_text != null)
-        {
-            _text.text = text;
-        }
-        else
-        {
-            Debug.LogWarning("TextMeshProUGUI component is not assigned in the inspector.");
-        }
+        gameObject.EnsureComponent(ref _text, true);
+        _text.text = text;
     }
 
     public void SetTextWithRole(string text, bool isYou)

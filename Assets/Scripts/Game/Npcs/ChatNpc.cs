@@ -43,8 +43,8 @@ public class ChatNpc : Interactable, IHuman
             Debug.LogError("NPCDatabase is not assigned in the inspector.");
         }
 
-        if (_animator == null)
-            _animator = GetComponent<Animator>();
+        gameObject.EnsureComponent(ref _animator, true);
+        gameObject.EnsureComponent(ref _spriteRenderer, true);
     }
 
     virtual protected void Start()
