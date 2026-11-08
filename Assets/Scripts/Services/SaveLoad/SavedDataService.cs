@@ -49,12 +49,14 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
             if (_playerSavedData.notebookData[i].evidenceKey == evidenceKey)
             {
                 _playerSavedData.notebookData[i] = notebookData;
+                SaveToPref();
                 OnEvidenceNoteSaved?.Invoke(notebookData);
                 return;
             }
         }
 
         _playerSavedData.notebookData.Add(notebookData);
+        SaveToPref();
         OnEvidenceNoteSaved?.Invoke(notebookData);
     }
 
@@ -71,6 +73,7 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
 
             _playerSavedData.EnsureNonNullLists();
             _playerSavedData.interactedNPCs.Add(npcData);
+            SaveToPref();
             OnNPCInteractedSaved?.Invoke(npcData);
         }
     }
@@ -91,6 +94,7 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
             if (_playerSavedData.unlockedDoors[i].doorName == doorName)
             {
                 _playerSavedData.unlockedDoors[i] = doorData;
+                SaveToPref();
                 OnDoorUnlockedSaved?.Invoke(doorData);
                 return;
             }
@@ -98,6 +102,7 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
 
         _playerSavedData.EnsureNonNullLists();
         _playerSavedData.unlockedDoors.Add(doorData);
+        SaveToPref();
         OnDoorUnlockedSaved?.Invoke(doorData);
     }
 
@@ -139,10 +144,12 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
                 continue;
 
             _playerSavedData.customData[index] = new CustomSavedData { key = key, value = value };
+            SaveToPref();
             return;
         }
 
         _playerSavedData.customData.Add(new CustomSavedData { key = key, value = value });
+        SaveToPref();
     }
 
     public bool HasInteractedWithNPC(string npcName)

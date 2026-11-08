@@ -61,6 +61,7 @@ public class ChatHistoryService : BaseSaveLoadService<ChatHistoryService>
             chatHistory = new ChatHistory
             {
                 key = ActiveChatNpc.NpcName,
+                currentContextIndex = 0,
                 chatItems = new List<ChatItem>()
             };
             _chatHistories[ActiveChatNpc.NpcName] = chatHistory;
@@ -104,12 +105,19 @@ public class ChatHistoryService : BaseSaveLoadService<ChatHistoryService>
             return;
         }
 
-        _chatHistories[key] = new ChatHistory
+        if (!_chatHistories.TryGetValue(key, out var chatHistory))
         {
-            key = key,
-            summary = summary,
-            chatItems = new List<ChatItem>()
-        };
+            chatHistory = new ChatHistory
+            {
+                key = key,
+                chatItems = new List<ChatItem>()
+            };
+        }
+
+        chatHistory.EnsureNotNull();
+        chatHistory.summary = summary;
+        chatHistory.currentContextIndex = chatHistory.chatItems.Count;
+        _chatHistories[key] = chatHistory;
     }
 
     public ChatHistoryService(bool loadFromPrefs) : base(loadFromPrefs)
@@ -123,8 +131,10 @@ public class ChatHistoryService : BaseSaveLoadService<ChatHistoryService>
             var json = PlayerPrefs.GetString(PrefKeys);
             var savedData = JsonUtility.FromJson<ChatHistorySaved>(json);
             savedData.EnsureNotNull();
-            foreach (var chatHistory in savedData.chatHistories)
+            for (var index = 0; index < savedData.chatHistories.Count; index++)
             {
+                var chatHistory = savedData.chatHistories[index];
+                chatHistory.EnsureNotNull();
                 _chatHistories[chatHistory.key] = chatHistory;
             }
         }
@@ -132,6 +142,9 @@ public class ChatHistoryService : BaseSaveLoadService<ChatHistoryService>
 
     protected override void SaveToPref()
     {
+        if (!_loadFromPrefs)
+            return;
+
         var savedData = new ChatHistorySaved
         {
             chatHistories = new List<ChatHistory>(_chatHistories.Values)
@@ -147,11 +160,13 @@ public struct ChatHistory
 {
     public string key;
     public string summary;
+    public int currentContextIndex;
     public List<ChatItem> chatItems;
 
     public void EnsureNotNull()
     {
         chatItems ??= new List<ChatItem>();
+        currentContextIndex = Mathf.Clamp(currentContextIndex, 0, chatItems.Count);
     }
 }
 

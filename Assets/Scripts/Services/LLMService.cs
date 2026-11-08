@@ -62,8 +62,13 @@ public class LLMService : LogicOnlyService<LLMService>
             summary = chatHistory.summary;
             if (chatHistory.chatItems != null)
             {
-                foreach (var chatItem in chatHistory.chatItems)
+                var contextIndex = Mathf.Clamp(
+                    chatHistory.currentContextIndex,
+                    0,
+                    chatHistory.chatItems.Count);
+                for (var index = contextIndex; index < chatHistory.chatItems.Count; index++)
                 {
+                    var chatItem = chatHistory.chatItems[index];
                     requestHistory.Add(new ChatRequestItem
                     {
                         role = GetRequestRole(chatItem.personKey),
@@ -85,6 +90,7 @@ public class LLMService : LogicOnlyService<LLMService>
 
         string jsonData = JsonUtility.ToJson(requestData);
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        string errorCode = null;
         try
         {
             Debug.Log($"LLMService: Sending request to LLM API with data: {jsonData}");
@@ -94,20 +100,31 @@ public class LLMService : LogicOnlyService<LLMService>
                 _fileLogService?.LogToken(token);
                 onTokenReceived?.Invoke(token);
             };
+            var streamResult = await PostRequestAsync(BASE_URL, jsonData, tokenLogger);
+            string response = streamResult.Response;
+            errorCode = streamResult.ErrorCode;
 #if BENCHMARK_TIME
-            string response = await PostRequestAsync(BASE_URL, jsonData, tokenLogger);
             stopwatch.Stop();
             Debug.Log($"LLMService: LLM API call time: {stopwatch.ElapsedMilliseconds} ms");
             // _fileLogService?.LogBenchmarkTime(stopwatch.ElapsedMilliseconds);
-#else
-            string response = await PostRequestAsync(BASE_URL, jsonData, tokenLogger);
 #endif
             stopwatch.Stop();
-            _fileLogService?.LogConversation(npcName, question, response, stopwatch.ElapsedMilliseconds);
-            _fileLogService?.SubmitConversationToGoogleForm(npcName, question, response);
+            _fileLogService?.LogConversation(
+                npcName,
+                question,
+                jsonData,
+                response,
+                stopwatch.ElapsedMilliseconds,
+                "Chat",
+                errorCode);
+            _fileLogService?.SubmitConversationToGoogleForm(
+                npcName,
+                question,
+                jsonData,
+                response,
+                errorCode);
             _chatHistoryService?.PushChatItem(npcName, response);
             await CompactHistoryIfNeededAsync(npcName);
-            // This will cause a DivideByZeroException
             return new LLMResponse
             {
                 response = response,
@@ -117,11 +134,27 @@ public class LLMService : LogicOnlyService<LLMService>
         catch (Exception ex)
         {
             stopwatch.Stop();
-            Debug.LogError($"LLMService: Error calling LLM API: {ex.Message}");
-            _fileLogService?.LogConversation(npcName, question, ex.Message, stopwatch.ElapsedMilliseconds, "Error");
+            var requestException = ex as LlmRequestException;
+            var serverMessage = requestException?.ServerMessage ?? ex.Message;
+            errorCode ??= requestException?.ErrorCode ?? requestException?.HttpStatusCode.ToString();
+            Debug.LogError($"LLMService: Error calling LLM API: {serverMessage}");
+            _fileLogService?.LogConversation(
+                npcName,
+                question,
+                jsonData,
+                serverMessage,
+                stopwatch.ElapsedMilliseconds,
+                "Error",
+                errorCode);
+            _fileLogService?.SubmitConversationToGoogleForm(
+                npcName,
+                question,
+                jsonData,
+                serverMessage,
+                errorCode);
             return new LLMResponse
             {
-                response = ex.Message,
+                response = serverMessage,
                 status = LLMResponse.Status.Error
             };
         }
@@ -132,7 +165,7 @@ public class LLMService : LogicOnlyService<LLMService>
         if (_chatHistoryService == null ||
             !_chatHistoryService.TryGetChatHistory(npcName, out var chatHistory) ||
             chatHistory.chatItems == null ||
-            chatHistory.chatItems.Count < COMPACT_HISTORY_LINE_COUNT)
+            chatHistory.chatItems.Count - chatHistory.currentContextIndex < COMPACT_HISTORY_LINE_COUNT)
         {
             return;
         }
@@ -205,7 +238,7 @@ public class LLMService : LogicOnlyService<LLMService>
         return responseText;
     }
 
-    private async UniTask<string> PostRequestAsync(string url, string json, Action<string> onTokenReceived)
+    private async UniTask<LlmStreamResult> PostRequestAsync(string url, string json, Action<string> onTokenReceived)
     {
         using var request = new UnityWebRequest(url, "POST");
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
@@ -227,9 +260,17 @@ public class LLMService : LogicOnlyService<LLMService>
         parser.Complete(responseBuilder, onTokenReceived, OnWeakPointHit);
 
         if (request.result == UnityWebRequest.Result.Success)
-            return responseBuilder.ToString();
-        else
-            throw new InvalidOperationException(request.error ?? ERROR_MESSAGE);
+            return new LlmStreamResult
+            {
+                Response = responseBuilder.ToString(),
+                ErrorCode = parser.ErrorCode
+            };
+
+        throw new LlmRequestException(
+            request.error ?? ERROR_MESSAGE,
+            parser.ServerMessage,
+            parser.ErrorCode,
+            request.responseCode);
     }
 
     private static void ProcessSseChunks(
@@ -278,8 +319,11 @@ internal sealed class SseParser
 {
     private readonly List<byte> _lineBytes = new();
     private readonly StringBuilder _eventData = new();
+    private readonly StringBuilder _serverMessage = new();
     private string _eventName;
     private bool _weakPointHitRaised;
+    public string ServerMessage => _serverMessage.ToString();
+    public string ErrorCode { get; private set; }
 
     public void Append(byte[] chunk, StringBuilder responseBuilder, Action<string> onTokenReceived, Action onWeakPointHit)
     {
@@ -338,6 +382,9 @@ internal sealed class SseParser
 
         var data = _eventData.ToString();
         _eventData.Clear();
+        if (_serverMessage.Length > 0)
+            _serverMessage.Append('\n');
+        _serverMessage.Append(data);
 
         if (string.IsNullOrEmpty(_eventName))
             return;
@@ -351,6 +398,7 @@ internal sealed class SseParser
         if (string.Equals(eventName, "meta", StringComparison.OrdinalIgnoreCase))
         {
             var streamEvent = JsonUtility.FromJson<LlmStreamEvent>(data);
+            ErrorCode = FirstNonEmpty(streamEvent.errorCode, streamEvent.code);
             if (streamEvent.weakPointHit && !_weakPointHitRaised)
             {
                 _weakPointHitRaised = true;
@@ -360,11 +408,24 @@ internal sealed class SseParser
         }
 
         var token = ExtractToken(data);
+        var errorEvent = JsonUtility.FromJson<LlmStreamEvent>(data);
+        ErrorCode = FirstNonEmpty(ErrorCode, errorEvent.errorCode, errorEvent.code);
         if (string.IsNullOrEmpty(token))
             return;
 
         responseBuilder.Append(token);
         onTokenReceived?.Invoke(token);
+    }
+
+    private static string FirstNonEmpty(params string[] values)
+    {
+        foreach (var value in values)
+        {
+            if (!string.IsNullOrEmpty(value))
+                return value;
+        }
+
+        return null;
     }
 
     private static string ExtractToken(string data)
@@ -380,6 +441,27 @@ internal sealed class SseParser
 
         return string.Empty;
     }
+}
+
+internal struct LlmStreamResult
+{
+    public string Response;
+    public string ErrorCode;
+}
+
+internal sealed class LlmRequestException : Exception
+{
+    public LlmRequestException(string message, string serverMessage, string errorCode, long httpStatusCode)
+        : base(message)
+    {
+        ServerMessage = string.IsNullOrWhiteSpace(serverMessage) ? message : serverMessage;
+        ErrorCode = errorCode;
+        HttpStatusCode = httpStatusCode;
+    }
+
+    public string ServerMessage { get; }
+    public string ErrorCode { get; }
+    public long HttpStatusCode { get; }
 }
 
 public struct LLMRequest
@@ -446,4 +528,6 @@ public struct LlmStreamEvent
     public string text;
     public string token;
     public bool weakPointHit;
+    public string errorCode;
+    public string code;
 }

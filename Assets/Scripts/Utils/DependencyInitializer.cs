@@ -29,8 +29,4 @@ public class DependencyInitializer : Singleton<DependencyInitializer>
             service.OnDestroy();
     }
 
-    private void OnApplicationQuit()
-    {
-        _fileLogService?.UploadLogOnApplicationQuit();
-    }
 }

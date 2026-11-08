@@ -54,9 +54,16 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
         Write("Info", $"LLM API call time: {elapsedMilliseconds} ms");
     }
 
-    public void LogConversation(string npcName, string question, string response, long elapsedMilliseconds, string level = "Chat")
+    public void LogConversation(
+        string npcName,
+        string question,
+        string requestJson,
+        string response,
+        long elapsedMilliseconds,
+        string level = "Chat",
+        string errorCode = null)
     {
-        Write(level, $"NpcName: {npcName} | ResponseTime: {elapsedMilliseconds} ms | Question: {question} | Response: {response}");
+        Write(level, $"NpcName: {npcName} | ResponseTime: {elapsedMilliseconds} ms | ErrorCode: {errorCode ?? "none"} | RequestJson: {requestJson} | Question: {question} | Response: {response}");
     }
 
     public void LogToken(string token)
@@ -64,15 +71,25 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
         // Write("Token", token);
     }
 
-    public void SubmitConversationToGoogleForm(string npcName, string question, string response)
+    public void SubmitConversationToGoogleForm(
+        string npcName,
+        string question,
+        string requestJson,
+        string response,
+        string errorCode = null)
     {
         EnsureSessionKey();
-        SubmitConversationToGoogleFormAsync(npcName, question, response).Forget();
+        SubmitConversationToGoogleFormAsync(npcName, question, requestJson, response, errorCode).Forget();
     }
 
-    private async UniTask SubmitConversationToGoogleFormAsync(string npcName, string question, string response)
+    private async UniTask SubmitConversationToGoogleFormAsync(
+        string npcName,
+        string question,
+        string requestJson,
+        string response,
+        string errorCode)
     {
-        var conversation = $"NpcName: {npcName} | Question: {question} | Response: {response}";
+        var conversation = $"NpcName: {npcName} | ErrorCode: {errorCode ?? "none"} | RequestJson: {requestJson} | Question: {question} | Response: {response}";
         await PostToGoogleFormAsync(conversation, SessionKey, "conversation");
     }
 
@@ -89,11 +106,6 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
 
         _automaticUploadStarted = true;
         return await UploadLogFileToGoogleFormAsync(_logFilePath, SessionKey);
-    }
-
-    public void UploadLogOnApplicationQuit()
-    {
-        UploadLogToGoogleFormAsync().Forget();
     }
 
     public static async UniTask<bool> UploadLogFileToGoogleFormAsync(string logFilePath, string sessionKey = null)
