@@ -1,8 +1,12 @@
+using TMPro;
 using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private BaseUIButton startButton;
+    [SerializeField] private BaseUIButton copySessionKeyButton;
+    [SerializeField] private TextMeshProUGUI sessionKeyText;
+    [SerializeField] private ClipboardManager clipboardManager;
     private SceneService _sceneService;
     private FileLogService _fileLogService;
 
@@ -22,15 +26,7 @@ public class MainMenu : MonoBehaviour
         ServiceLocator.TryOrWaitForService<SceneService>(HandleSceneService);
         ServiceLocator.TryOrWaitForService<FileLogService>(HandleFileLogService);
         startButton.AddListener(HandleStartButtonClick);
-        if (startButton == null)
-        {
-            Debug.LogError("Start button is not assigned in the inspector.");
-        }
-        else
-        {
-            Debug.Log("Start button is assigned and listener added.");
-        }
-        Debug.Log("MainMenu enabled and listeners added.");
+        copySessionKeyButton.AddListener(HandleCopyButtonClick);
     }
 
     void OnDisable()
@@ -38,15 +34,7 @@ public class MainMenu : MonoBehaviour
         ServiceLocator.RemoveServiceCallback<SceneService>(HandleSceneService);
         ServiceLocator.RemoveServiceCallback<FileLogService>(HandleFileLogService);
         startButton.RemoveListener(HandleStartButtonClick);
-        if (startButton == null)
-        {
-            Debug.LogError("Start button is not assigned in the inspector.");
-        }
-        else
-        {
-            Debug.Log("Start button listener removed.");
-        }
-        Debug.Log("MainMenu disabled and listeners removed.");
+        copySessionKeyButton.RemoveListener(HandleCopyButtonClick);
     }
 
     private void HandleFileLogService(IService service)
@@ -58,6 +46,11 @@ public class MainMenu : MonoBehaviour
         }
 
         _fileLogService = fileLogService;
+        _fileLogService.EnsureSessionKey();
+        if (sessionKeyText != null)
+        {
+            sessionKeyText.text = $"Session key: {_fileLogService.SessionKey}";
+        }
     }
 
     private void HandleStartButtonClick()
@@ -72,5 +65,16 @@ public class MainMenu : MonoBehaviour
 
         _fileLogService?.EnsureSessionKey();
         _sceneService.TransitionToScene("Assets/Scenes/StartRoad.unity");
+    }
+
+    private void HandleCopyButtonClick()
+    {
+        if (clipboardManager == null)
+        {
+            Debug.LogError("ClipboardManager is not assigned in the inspector.");
+            return;
+        }
+
+        clipboardManager.CopyText(_fileLogService?.SessionKey ?? string.Empty);
     }
 }

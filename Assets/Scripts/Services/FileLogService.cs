@@ -43,7 +43,7 @@ public sealed class FileLogService : LogicOnlyService<FileLogService>
             return;
         }
 
-        SessionKey = Guid.NewGuid().ToString("N");
+        SessionKey = Guid.NewGuid().ToString("N")[..7];
         PlayerPrefs.SetString(SessionKeyPlayerPrefsKey, SessionKey);
         PlayerPrefs.Save();
         Debug.Log($"FileLogService: Started session {SessionKey}");

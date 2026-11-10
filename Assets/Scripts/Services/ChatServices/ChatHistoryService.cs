@@ -71,6 +71,7 @@ public class ChatHistoryService : BaseSaveLoadService<ChatHistoryService>
         var chatItem = new ChatItem { personKey = personKey, message = message };
 
         chatHistory.chatItems.Add(chatItem);
+        SaveToPref();
         ChatEvents.OnChatItemPushed?.Invoke(chatItem);
     }
 
