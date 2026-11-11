@@ -20,6 +20,7 @@ public class WinCondService : LogicOnlyService<WinCondService>
     {
         _selectedEvidenceName = evidenceName;
         ValidateWinCondition();
+        CurrentSelectingState = 0;
     }
 
     public Action OnWinConditionMet;

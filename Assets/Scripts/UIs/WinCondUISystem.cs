@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WinCondUISystem : BaseUIPanelSystem
 {
@@ -17,6 +20,8 @@ public class WinCondUISystem : BaseUIPanelSystem
     private readonly List<SelectNameButton> _nameButtons = new();
     private WinCondService _winCondService;
     private SavedDataService _savedDataService;
+    private SceneService _sceneService;
+    private bool _endSceneTransitionScheduled;
 
     protected override void Awake()
     {
@@ -24,12 +29,20 @@ public class WinCondUISystem : BaseUIPanelSystem
         _nameButtonContainer ??= transform.Find("ContentPanel/Scroll View/Viewport/Content");
         _selectionPrompt ??= transform.Find("ContentPanel/Lựa chọn")?.GetComponentInChildren<TextMeshProUGUI>();
         ServiceLocator.TryOrWaitForService<SavedDataService>(HandleLoadData);
+        ServiceLocator.TryOrWaitForService<SceneService>(HandleSceneService);
     }
 
     void OnDestroy()
     {
         ServiceLocator.RemoveServiceCallback<SavedDataService>(HandleLoadData);
         ServiceLocator.RemoveServiceCallback<WinCondService>(HandleWinCondService);
+        ServiceLocator.RemoveServiceCallback<SceneService>(HandleSceneService);
+
+        if (_winCondService != null)
+        {
+            _winCondService.OnWinConditionMet -= HandleWinConditionMet;
+            _winCondService.OnWinConditionFailed -= HandleWinConditionFailed;
+        }
     }
 
     override protected void OnEnable()
@@ -75,6 +88,19 @@ public class WinCondUISystem : BaseUIPanelSystem
             return;
         }
         _winCondService = service;
+        _winCondService.OnWinConditionMet += HandleWinConditionMet;
+        _winCondService.OnWinConditionFailed += HandleWinConditionFailed;
+    }
+
+    private void HandleSceneService(IService sceneService)
+    {
+        if (sceneService is not SceneService service)
+        {
+            Debug.LogError("SceneService is not available.");
+            return;
+        }
+
+        _sceneService = service;
     }
 
     protected override void OpenPanel()
@@ -138,12 +164,82 @@ public class WinCondUISystem : BaseUIPanelSystem
     private void HandleSelection(string selectionName)
     {
         if (_winCondService.CurrentSelectingState == 0)
+        {
             _winCondService.SetSelectedNPCName(selectionName);
-        else
-            _winCondService.SetSelectedEvidenceName(selectionName);
+            UpdateSelectionPrompt();
+            LoadNameButtons();
+            return;
+        }
 
-        UpdateSelectionPrompt();
-        LoadNameButtons();
+        _winCondService.SetSelectedEvidenceName(selectionName);
+    }
+
+    private void HandleWinConditionMet()
+    {
+        ClosePanel();
+        ShowResultPopup("Bạn đã giải được vụ án!");
+        TransitionToEndSceneAfterDelay().Forget();
+    }
+
+    private void HandleWinConditionFailed()
+    {
+        ClosePanel();
+        ShowResultPopup("Đó có vẻ không phải là hung thủ và bằng chứng đúng. Hãy thử lại!");
+    }
+
+    private void ShowResultPopup(string message)
+    {
+        var popup = new GameObject("WinConditionResultPopup", typeof(RectTransform), typeof(Image));
+        popup.transform.SetParent(transform, false);
+
+        var popupRect = (RectTransform)popup.transform;
+        popupRect.anchorMin = new Vector2(0.5f, 0.5f);
+        popupRect.anchorMax = new Vector2(0.5f, 0.5f);
+        popupRect.pivot = new Vector2(0.5f, 0.5f);
+        popupRect.sizeDelta = new Vector2(600f, 180f);
+
+        var background = popup.GetComponent<Image>();
+        background.color = new Color(0f, 0f, 0f, 0.85f);
+
+        var textObject = new GameObject("Message", typeof(RectTransform), typeof(TextMeshProUGUI));
+        textObject.transform.SetParent(popup.transform, false);
+        var textRect = (RectTransform)textObject.transform;
+        textRect.anchorMin = Vector2.zero;
+        textRect.anchorMax = Vector2.one;
+        textRect.offsetMin = new Vector2(20f, 20f);
+        textRect.offsetMax = new Vector2(-20f, -20f);
+
+        var resultText = textObject.GetComponent<TextMeshProUGUI>();
+        resultText.text = message;
+        resultText.alignment = TextAlignmentOptions.Center;
+        resultText.fontSize = 48f;
+        resultText.color = Color.white;
+
+        Destroy(popup, 2f);
+    }
+
+    private async UniTaskVoid TransitionToEndSceneAfterDelay()
+    {
+        if (_endSceneTransitionScheduled)
+            return;
+
+        _endSceneTransitionScheduled = true;
+
+        try
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(3), cancellationToken: this.GetCancellationTokenOnDestroy());
+
+            if (_sceneService == null)
+            {
+                Debug.LogError("SceneService is not available. Cannot transition to EndScene.");
+                return;
+            }
+
+            _sceneService.TransitionToScene("Assets/Scenes/EndScene.unity");
+        }
+        catch (OperationCanceledException)
+        {
+        }
     }
 
     private SelectNameButton GetNameButton(int index)

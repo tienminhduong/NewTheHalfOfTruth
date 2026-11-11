@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class NotebookUISystem : BaseUIPanelSystem
@@ -16,6 +17,7 @@ public class NotebookUISystem : BaseUIPanelSystem
     private int _currentPageIndex = 0;
 
     private SavedDataService _savedDataService;
+    private Tween _notebookVibration;
 
     protected override void Awake()
     {
@@ -28,6 +30,7 @@ public class NotebookUISystem : BaseUIPanelSystem
     {
         ServiceLocator.RemoveServiceCallback<SavedDataService>(HandleLoadData);
         SavedDataService.OnEvidenceNoteSaved -= HandleEvidenceCollected;
+        _notebookVibration?.Kill();
     }
 
     override protected void OnEnable()
@@ -69,7 +72,26 @@ public class NotebookUISystem : BaseUIPanelSystem
         {
             _evidenceKeysCollected.Add(notebookData.evidenceKey);
             ClampPageIndex();
+            VibrateNotebook();
         }
+    }
+
+    private void VibrateNotebook()
+    {
+        if (_notebookOpenButton == null)
+            return;
+
+        if (_notebookOpenButton.transform is not RectTransform notebookTransform)
+            return;
+
+        _notebookVibration?.Kill();
+        _notebookVibration = notebookTransform.DOShakeAnchorPos(
+            duration: 0.6f,
+            strength: new Vector2(10f, 10f),
+            vibrato: 18,
+            randomness: 90f,
+            snapping: false,
+            fadeOut: true);
     }
 
     private void LoadEvidenceForCurrentPage()
