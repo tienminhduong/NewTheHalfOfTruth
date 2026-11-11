@@ -18,6 +18,7 @@ public class DependencyInitializer : Singleton<DependencyInitializer>
         _logicOnlyServices.Add(new SavedDataService(_evidenceDatabase, _loadFromPrefs));
         _logicOnlyServices.Add(new ChatHistoryService(_loadFromPrefs));
         _logicOnlyServices.Add(new LLMService());
+        _logicOnlyServices.Add(new WinCondService());
 
         foreach (var service in _logicOnlyServices)
             service.Awake();

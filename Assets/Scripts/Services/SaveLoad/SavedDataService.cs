@@ -230,6 +230,15 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
             }
         }
     }
+
+    public IEnumerable<string> GetInteractedNPCNames()
+    {
+        if (_interactedNPCs == null)
+            yield break;
+
+        foreach (var npcName in _interactedNPCs)
+            yield return npcName;
+    }
 }
 
 [Serializable]
