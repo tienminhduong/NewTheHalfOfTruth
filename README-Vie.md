@@ -26,7 +26,7 @@ Các cuộc trò chuyện với NPC được gửi đến một dịch vụ LLM/
 Endpoint hội thoại bên ngoài hiện được `LLMService` sử dụng:
 
 ```text
-https://rag-jkoh.onrender.com/api/query/ask
+https://rag-6fs2.onrender.com/api/query/ask
 ```
 
 Endpoint này đang được hard-code trong Unity client. Backend không nằm trong repository này.

@@ -71,10 +71,10 @@ MonoBehaviour:
     evidenceSprite: {fileID: -1469909079130451432, guid: 478807c53e9978445833a68cb28cb089, type: 3}
     playerNote: 
   - key: CouplePicture
-    name: "H\xECnh \u1EA3nh"
+    name: "H\xECnh \u1EA3nh trong ph\xF2ng"
     description: "\u0110\xE2y l\xE0 Chris, Danie, v\xE0 ai v\u1EADy?"
     playerGuide: 
-    evidenceSprite: {fileID: -1469909079130451432, guid: 478807c53e9978445833a68cb28cb089, type: 3}
+    evidenceSprite: {fileID: 937675017702092221, guid: 80cc5dd75bada9a44a7f0625d2664d3c, type: 3}
     playerNote: 
   - key: ProgramList
     name: "Danh s\xE1ch ch\u01B0\u01A1ng tr\xECnh truy\u1EC1n h\xECnh"
@@ -89,8 +89,8 @@ MonoBehaviour:
     evidenceSprite: {fileID: -1469909079130451432, guid: 478807c53e9978445833a68cb28cb089, type: 3}
     playerNote: 
   - key: EvidenceImage
-    name: "T\u1EA5m \u1EA3nh Johny ch\u1EE5p"
+    name: "T\u1EA5m \u1EA3nh Johny ch\u1EE5p l\xFAc 9h"
     description: "\u1EA2nh ch\u1EE5p"
     playerGuide: 
-    evidenceSprite: {fileID: -1469909079130451432, guid: 478807c53e9978445833a68cb28cb089, type: 3}
+    evidenceSprite: {fileID: 133982719826790466, guid: fd15bd82f267a9d468e91f012ebfd276, type: 3}
     playerNote: 

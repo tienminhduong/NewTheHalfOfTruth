@@ -29,7 +29,7 @@ The project targets the Web platform and is intended to be published on itch.io.
 The external dialogue endpoint currently used by `LLMService` is:
 
 ```text
-https://rag-jkoh.onrender.com/api/query/ask
+https://rag-6fs2.onrender.com/api/query/ask
 ```
 
 This endpoint is hard-coded in the Unity client. The backend is not included in this repository.

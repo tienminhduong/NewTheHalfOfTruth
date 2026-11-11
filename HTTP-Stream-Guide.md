@@ -13,11 +13,12 @@ The main implementation is in `Assets/Scripts/Services/LLMService.cs`.
 - `question`
 - `summary`
 - `history`
+- `stage`
 
 Then it serializes the data with `JsonUtility.ToJson(...)` and sends it to the backend endpoint:
 
 ```csharp
-private const string BASE_URL = "https://rag-jkoh.onrender.com/api/query/ask-stream";
+private const string BASE_URL = "https://rag-6fs2.onrender.com/api/query/ask-stream";
 ```
 
 The request payload uses lowercase fields and includes the previous compact summary plus the un-compacted chat items:
@@ -30,6 +31,7 @@ public struct LLMRequest
     public string question;
     public string summary;
     public List<ChatRequestItem> history;
+    public int stage;
 }
 
 public struct ChatRequestItem
@@ -301,7 +303,7 @@ return new LLMResponse
 After a conversation reaches 10 chat items, `LLMService` sends the complete local history to:
 
 ```text
-POST https://rag-jkoh.onrender.com/api/query/compact-history
+POST https://rag-6fs2.onrender.com/api/query/compact-history
 Content-Type: application/json
 ```
 
@@ -310,6 +312,7 @@ The compact request uses the lowercase JSON fields expected by this endpoint:
 ```json
 {
   "npcName": "Johny",
+  "previousSummary": null,
   "history": [
     { "role": "player", "content": "Chào ông Johny." },
     { "role": "npc", "content": "Chào. Có chuyện gì?" }

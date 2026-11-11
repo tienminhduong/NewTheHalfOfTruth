@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 
 public class LLMService : LogicOnlyService<LLMService>
 {
-    private const string BASE_URL = "https://rag-streaming-faiss.onrender.com/api/query/ask-stream";
-    private const string COMPACT_HISTORY_URL = "https://rag-streaming-faiss.onrender.com/api/query/compact-history";
+    private const string BASE_URL = "https://rag-6fs2.onrender.com/api/query/ask-stream";
+    private const string COMPACT_HISTORY_URL = "https://rag-6fs2.onrender.com/api/query/compact-history";
     private const int COMPACT_HISTORY_LINE_COUNT = 10;
     private const string ERROR_MESSAGE = "Bạn hỏi gì thế tôi không hiểu??";
     public static event Action OnWeakPointHit;
@@ -24,6 +25,7 @@ public class LLMService : LogicOnlyService<LLMService>
     }
 
     private ChatHistoryService _chatHistoryService;
+    private SavedDataService _savedDataService;
     private FileLogService _fileLogService;
 
     public override void Awake()
@@ -32,6 +34,7 @@ public class LLMService : LogicOnlyService<LLMService>
 
         _fileLogService = ServiceLocator.GetService<FileLogService>();
         ServiceLocator.TryOrWaitForService<ChatHistoryService>(HandleChatHistoryServiceReady);
+        ServiceLocator.TryOrWaitForService<SavedDataService>(HandleSavedDataServiceReady);
     }
 
     public override void OnDestroy()
@@ -39,6 +42,7 @@ public class LLMService : LogicOnlyService<LLMService>
         base.OnDestroy();
 
         ServiceLocator.RemoveServiceCallback<ChatHistoryService>(HandleChatHistoryServiceReady);
+        ServiceLocator.RemoveServiceCallback<SavedDataService>(HandleSavedDataServiceReady);
     }
 
     private void HandleChatHistoryServiceReady(IService service)
@@ -50,6 +54,17 @@ public class LLMService : LogicOnlyService<LLMService>
         }
 
         _chatHistoryService = chatHistoryService;
+    }
+
+    private void HandleSavedDataServiceReady(IService service)
+    {
+        if (service is not SavedDataService savedDataService)
+        {
+            Debug.LogError($"ServiceLocator returned a service of type {service.GetType()} instead of SavedDataService.");
+            return;
+        }
+
+        _savedDataService = savedDataService;
     }
 
     public async UniTask<LLMResponse> CallLLMAsync(string npcName = "", string npcSystem = "", string question = "", Action<string> onTokenReceived = null)
@@ -84,7 +99,8 @@ public class LLMService : LogicOnlyService<LLMService>
             npcSystem = npcSystem,
             question = question,
             summary = summary,
-            history = requestHistory
+            history = requestHistory,
+            stage = GetStage(npcName)
         };
         _chatHistoryService?.PushChatItem("player", question);
 
@@ -131,6 +147,7 @@ public class LLMService : LogicOnlyService<LLMService>
                 status = LLMResponse.Status.Success
             };
         }
+
         catch (Exception ex)
         {
             stopwatch.Stop();
@@ -160,6 +177,31 @@ public class LLMService : LogicOnlyService<LLMService>
         }
     }
 
+    private int GetStage(string npcName)
+    {
+        if (npcName != "Johny")
+            return 1;
+
+        if (SceneManager.GetActiveScene().name == "Road")
+            return 1;
+
+        if (_savedDataService == null || !HasCollectedEvidence("EvidenceImage"))
+            return 2;
+
+        return 3;
+    }
+
+    private bool HasCollectedEvidence(string evidenceKey)
+    {
+        foreach (var collectedEvidenceKey in _savedDataService.GetEvidenceKeys())
+        {
+            if (collectedEvidenceKey == evidenceKey)
+                return true;
+        }
+
+        return false;
+    }
+
     private async UniTask CompactHistoryIfNeededAsync(string npcName)
     {
         if (_chatHistoryService == null ||
@@ -173,6 +215,7 @@ public class LLMService : LogicOnlyService<LLMService>
         var requestData = new CompactHistoryRequest
         {
             npcName = npcName,
+            previousSummary = chatHistory.summary,
             history = new List<CompactHistoryItem>()
         };
 
@@ -471,6 +514,7 @@ public struct LLMRequest
     public string question;
     public string summary;
     public List<ChatRequestItem> history;
+    public int stage;
 }
 
 [Serializable]
@@ -484,6 +528,7 @@ public struct ChatRequestItem
 public class CompactHistoryRequest
 {
     public string npcName;
+    public string previousSummary;
     public List<CompactHistoryItem> history;
 }
 
