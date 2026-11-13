@@ -96,10 +96,15 @@ public class DialogueUISystem : BaseUIPanelSystem
 
     protected override void ClosePanel()
     {
+        if (dialogueText.IsTyping)
+        {
+            dialogueText.EndCurrentDialogue();
+            return;
+        }
+
         if (_isWaitingForLLMResponse)
             return;
 
-        dialogueText.EndCurrentDialogue();
         base.ClosePanel();
         if (_currentChatNpc != null)
         {

@@ -18,10 +18,14 @@ public class NotebookUISystem : BaseUIPanelSystem
 
     private SavedDataService _savedDataService;
     private Tween _notebookVibration;
+    private Vector2 _notebookRestingPosition;
 
     protected override void Awake()
     {
         base.Awake();
+        if (_notebookOpenButton != null && _notebookOpenButton.transform is RectTransform notebookTransform)
+            _notebookRestingPosition = notebookTransform.anchoredPosition;
+
         ServiceLocator.TryOrWaitForService<SavedDataService>(HandleLoadData);
         SavedDataService.OnEvidenceNoteSaved += HandleEvidenceCollected;
     }
@@ -30,7 +34,7 @@ public class NotebookUISystem : BaseUIPanelSystem
     {
         ServiceLocator.RemoveServiceCallback<SavedDataService>(HandleLoadData);
         SavedDataService.OnEvidenceNoteSaved -= HandleEvidenceCollected;
-        _notebookVibration?.Kill();
+        StopNotebookVibration();
     }
 
     override protected void OnEnable()
@@ -91,7 +95,17 @@ public class NotebookUISystem : BaseUIPanelSystem
             vibrato: 18,
             randomness: 90f,
             snapping: false,
-            fadeOut: true);
+            fadeOut: true)
+            .SetLoops(-1, LoopType.Restart);
+    }
+
+    private void StopNotebookVibration()
+    {
+        _notebookVibration?.Kill();
+        _notebookVibration = null;
+
+        if (_notebookOpenButton != null && _notebookOpenButton.transform is RectTransform notebookTransform)
+            notebookTransform.anchoredPosition = _notebookRestingPosition;
     }
 
     private void LoadEvidenceForCurrentPage()
@@ -168,6 +182,8 @@ public class NotebookUISystem : BaseUIPanelSystem
 
     private void OpenOrCloseNotebook()
     {
+        StopNotebookVibration();
+
         if (IsPanelOpen)
         {
             ClosePanel();

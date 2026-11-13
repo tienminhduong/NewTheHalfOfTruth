@@ -89,8 +89,8 @@ MonoBehaviour:
     evidenceSprite: {fileID: -1469909079130451432, guid: 478807c53e9978445833a68cb28cb089, type: 3}
     playerNote: 
   - key: EvidenceImage
-    name: "T\u1EA5m \u1EA3nh Johny ch\u1EE5p l\xFAc 9h"
-    description: "\u1EA2nh ch\u1EE5p"
+    name: "H\xECnh \u1EA3nh"
+    description: "T\u1EA5m \u1EA3nh Johny ch\u1EE5p l\xFAc 9h"
     playerGuide: 
     evidenceSprite: {fileID: 133982719826790466, guid: fd15bd82f267a9d468e91f012ebfd276, type: 3}
     playerNote: 

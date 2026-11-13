@@ -22,14 +22,17 @@ public class WinCondUISystem : BaseUIPanelSystem
     private SavedDataService _savedDataService;
     private SceneService _sceneService;
     private bool _endSceneTransitionScheduled;
+    private bool _hasMetJohny;
 
     protected override void Awake()
     {
         base.Awake();
         _nameButtonContainer ??= transform.Find("ContentPanel/Scroll View/Viewport/Content");
         _selectionPrompt ??= transform.Find("ContentPanel/Lựa chọn")?.GetComponentInChildren<TextMeshProUGUI>();
+        _winCondOpenButton?.gameObject.SetActive(false);
         ServiceLocator.TryOrWaitForService<SavedDataService>(HandleLoadData);
         ServiceLocator.TryOrWaitForService<SceneService>(HandleSceneService);
+        SavedDataService.OnNPCInteracted += HandleNPCInteracted;
     }
 
     void OnDestroy()
@@ -37,6 +40,7 @@ public class WinCondUISystem : BaseUIPanelSystem
         ServiceLocator.RemoveServiceCallback<SavedDataService>(HandleLoadData);
         ServiceLocator.RemoveServiceCallback<WinCondService>(HandleWinCondService);
         ServiceLocator.RemoveServiceCallback<SceneService>(HandleSceneService);
+        SavedDataService.OnNPCInteracted -= HandleNPCInteracted;
 
         if (_winCondService != null)
         {
@@ -77,7 +81,19 @@ public class WinCondUISystem : BaseUIPanelSystem
             return;
         }
         _savedDataService = service;
+        _hasMetJohny = _savedDataService.HasInteractedWithNPC("Johny");
         ServiceLocator.TryOrWaitForService<WinCondService>(HandleWinCondService);
+    }
+
+    private void HandleNPCInteracted(string npcName)
+    {
+        if (npcName != "Johny")
+            return;
+
+        if (_hasMetJohny)
+            _winCondOpenButton?.gameObject.SetActive(true);
+
+        _hasMetJohny = true;
     }
 
     private void HandleWinCondService(IService winCondService)

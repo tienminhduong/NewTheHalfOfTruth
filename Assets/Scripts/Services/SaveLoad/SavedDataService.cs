@@ -10,6 +10,7 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
 
     public static event Action<NotebookSavedData> OnEvidenceNoteSaved;
     public static event Action<InteractedNPCSavedData> OnNPCInteractedSaved;
+    public static event Action<string> OnNPCInteracted;
     public static event Action<UnlockedDoorSavedData> OnDoorUnlockedSaved;
 
     public SavedDataService(EvidenceDatabase database, bool loadFromPrefs = true) : base(loadFromPrefs)
@@ -63,6 +64,7 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
     public void SaveInteractedNPC(string npcName)
     {
         _interactedNPCs ??= new HashSet<string>();
+        OnNPCInteracted?.Invoke(npcName);
 
         if (_interactedNPCs.Add(npcName))
         {

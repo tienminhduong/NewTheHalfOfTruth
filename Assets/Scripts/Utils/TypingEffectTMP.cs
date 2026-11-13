@@ -15,6 +15,7 @@ public class TypingEffectTMP : MonoBehaviour
     public event Action OnTypingComplete;
 
     private CancellationTokenSource typingCancellationTokenSource;
+    private string _currentDialogue = string.Empty;
     private const string HTML_TRANSPARENT_TAG = "<color=#00000000>";
     private const string HTML_END_TAG = "</color>";
 
@@ -25,16 +26,20 @@ public class TypingEffectTMP : MonoBehaviour
 
     public void PlayDialogue(string dialogueLine)
     {
+        EndCurrentDialogue();
+        _currentDialogue = dialogueLine ?? string.Empty;
         typingCancellationTokenSource = new CancellationTokenSource();
-        PlayDialogueAsync(dialogueLine, typingCancellationTokenSource.Token).Forget();
+        PlayDialogueAsync(_currentDialogue, typingCancellationTokenSource.Token).Forget();
     }
 
     public void EndCurrentDialogue()
     {
         if (IsTyping)
         {
-            typingCancellationTokenSource.Cancel();
             IsTyping = false;
+            typingCancellationTokenSource.Cancel();
+            _textMeshPro.text = _currentDialogue;
+            OnTypingComplete?.Invoke();
         }
     }
 
@@ -65,6 +70,10 @@ public class TypingEffectTMP : MonoBehaviour
             }
             catch (OperationCanceledException)
             {
+                if (!IsTyping || typingCancellationTokenSource == null
+                    || typingCancellationTokenSource.Token != cancellationToken)
+                    return;
+
                 IsTyping = false;
                 _textMeshPro.text = originalText;
                 OnTypingComplete?.Invoke();
