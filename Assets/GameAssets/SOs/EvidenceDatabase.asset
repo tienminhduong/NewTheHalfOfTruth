@@ -78,13 +78,8 @@ MonoBehaviour:
     playerNote: 
   - key: ProgramList
     name: "Danh s\xE1ch ch\u01B0\u01A1ng tr\xECnh truy\u1EC1n h\xECnh"
-    description: "7:00 - Ch\u01B0\u01A1ng tr\xECnh b\xF3ng \u0111\xE1\\n9:00 - Th\u1EBF
-      gi\u1EDBi \u0111\u1ED9ng v\u1EADt\\n10:30 - G\xF3c \u1EA9m th\u1EF1c\\n12:00
-      - Th\u1EDDi s\u1EF1 tr\u01B0a\\n13:30 - Phim truy\u1EC7n\\n15:00 - Th\u1EBF
-      gi\u1EDBi \xE2m nh\u1EA1c\\n17:00 - S\u1EE9c kh\u1ECFe cho m\u1ECDi nh\xE0\\n18:00
-      - Ch\u01B0\u01A1ng tr\xECnh b\xF3ng \u0111\xE1\\n20:00 - Th\u1EDDi s\u1EF1
-      t\u1ED1i\\n20:30 - T\u1ECDa \u0111\xE0m chuy\xEAn \u0111\u1EC1\\n22:00 - Phim
-      t\xE0i li\u1EC7u"
+    description: "19:00 - Ch\u01B0\u01A1ng tr\xECnh b\xF3ng \u0111\xE1\\n21:00 -
+      Th\u1EBF gi\u1EDBi \u0111\u1ED9ng v\u1EADt\\n22:30 - G\xF3c \u1EA9m th\u1EF1c"
     playerGuide: 
     evidenceSprite: {fileID: -1469909079130451432, guid: 478807c53e9978445833a68cb28cb089, type: 3}
     playerNote: 
@@ -93,4 +88,14 @@ MonoBehaviour:
     description: "T\u1EA5m \u1EA3nh Johny ch\u1EE5p l\xFAc 9h"
     playerGuide: 
     evidenceSprite: {fileID: 133982719826790466, guid: fd15bd82f267a9d468e91f012ebfd276, type: 3}
+    playerNote: 
+  - key: Guide
+    name: "H\u01B0\u1EDBng d\u1EABn \u0111i\u1EC1u khi\u1EC3n"
+    description: "D\xF9ng ph\xEDm m\u0169i t\xEAn \u0111\u1EC3 chuy\u1EC3n\\nNh\u1EA5n
+      'F' \u0111\u1EC3 t\u01B0\u01A1ng t\xE1c ho\u1EB7c tr\xF2 chuy\u1EC7n\\nQuy\u1EC3n
+      s\u1ED5 tay n\xE0y c\xF3 th\u1EC3 l\u01B0u tr\u1EEF th\xF4ng tin b\u1EB1ng
+      ch\u1EE9ng \u0111\xE3 thu th\u1EADp, c\u0169ng nh\u01B0 c\xF3 th\u1EC3 ghi
+      ch\xFA th\xF4ng tin ph\xEDa d\u01B0\u1EDBi"
+    playerGuide: 
+    evidenceSprite: {fileID: -1469909079130451432, guid: 478807c53e9978445833a68cb28cb089, type: 3}
     playerNote: 

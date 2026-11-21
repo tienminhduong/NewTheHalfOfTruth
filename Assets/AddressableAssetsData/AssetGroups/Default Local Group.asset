@@ -14,7 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Default Local Group
   m_GUID: 5b1659f6f22ce624aae571f3742a24b4
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 05442410601c57b4a8ee02b0d9f442f0
+    m_Address: Assets/GameAssets/Sprites/Characters/Chris.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0679d63add65b0442bbf7aeaa2a0fc65
+    m_Address: Assets/GameAssets/TilePalette/2_City_Terrains_32x32_3049.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 102a778e72d284b4d85c321c1e248707
+    m_Address: Assets/GameAssets/Sprites/Characters/NPC2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1572e8f6132669b40851ed9d3f1ee415
+    m_Address: Assets/GameAssets/Sprites/Room/Room_Builder_3d_walls_32x32.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 15bcb3d2e06348741b092a9b4f1f4fb4
+    m_Address: Assets/GameAssets/Sprites/Evidences/Window.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 3d575db7c147364438764608736a8e2d, type: 2}
   m_SchemaSet:

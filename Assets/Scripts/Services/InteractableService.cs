@@ -54,8 +54,10 @@ public class InteractableService : MonoBehaviourService<InteractableService>
 
     private void CheckForInteraction()
     {
-        if (_activePlayer == null)
+        if (_activePlayer == null) {
+            _interactionIndicatorCanvas.gameObject.SetActive(false);
             return;
+        }
 
         float lowestDistance = 0f;
         Interactable closestInteractable = null;

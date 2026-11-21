@@ -6,7 +6,10 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
 {
     private PlayerSavedData _playerSavedData;
     private const string PlayerPrefsKey = "PlayerSavedData";
+    private const string GuideEvidenceKey = "Guide";
     private EvidenceDatabase _evidenceDatabase;
+
+    public bool WasGuideAddedOnLoad { get; set; }
 
     public static event Action<NotebookSavedData> OnEvidenceNoteSaved;
     public static event Action<InteractedNPCSavedData> OnNPCInteractedSaved;
@@ -209,6 +212,12 @@ public class SavedDataService : BaseSaveLoadService<SavedDataService>
             Debug.Log("[SavedDataService] No saved data found in PlayerPrefs. Initializing with default values.");
             _playerSavedData = new PlayerSavedData();
             _playerSavedData.EnsureNonNullLists();
+        }
+
+        if (_notebookDataDictionary == null || !_notebookDataDictionary.ContainsKey(GuideEvidenceKey))
+        {
+            SaveNotebookData(GuideEvidenceKey, string.Empty);
+            WasGuideAddedOnLoad = _notebookDataDictionary != null && _notebookDataDictionary.ContainsKey(GuideEvidenceKey);
         }
     }
 

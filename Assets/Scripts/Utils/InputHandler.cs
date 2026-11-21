@@ -18,11 +18,13 @@ public class InputHandler : MonoBehaviour, IPlayerActions, IUIActions
     public static void FocusUIInput()
     {
         OnInputFocusChange?.Invoke(true);
+        Input.imeCompositionMode = IMECompositionMode.On;
     }
 
     public static void FocusPlayerInput()
     {
         OnInputFocusChange?.Invoke(false);
+        Input.imeCompositionMode = IMECompositionMode.Off;
     }
 
 

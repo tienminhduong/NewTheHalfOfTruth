@@ -68,6 +68,9 @@ public class NotebookUISystem : BaseUIPanelSystem
         _evidenceKeysCollected.Clear();
         _evidenceKeysCollected.AddRange(_savedDataService.GetEvidenceKeys());
         ClampPageIndex();
+
+        if (_savedDataService.WasGuideAddedOnLoad)
+            VibrateNotebook();
     }
 
     private void HandleEvidenceCollected(NotebookSavedData notebookData)
@@ -106,6 +109,8 @@ public class NotebookUISystem : BaseUIPanelSystem
 
         if (_notebookOpenButton != null && _notebookOpenButton.transform is RectTransform notebookTransform)
             notebookTransform.anchoredPosition = _notebookRestingPosition;
+        if (_savedDataService != null)
+            _savedDataService.WasGuideAddedOnLoad = false;
     }
 
     private void LoadEvidenceForCurrentPage()
