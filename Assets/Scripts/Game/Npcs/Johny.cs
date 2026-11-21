@@ -42,7 +42,7 @@ public class Johny : ChatNpc
         base.OnChatEnd();
 
         if (gameObject.scene.name == _roadSceneName)
-            LoadSpawnImageAsync(destroyCancellationToken).ContinueWith(MoveOutScreen);
+            SpawnImageAndMoveOutAsync(destroyCancellationToken).Forget();
 
         if (isWeakPointHit)
         {
@@ -81,14 +81,50 @@ public class Johny : ChatNpc
         }
     }
 
+    private async UniTask SpawnImageAndMoveOutAsync(CancellationToken cancellationToken)
+    {
+        await LoadSpawnImageAsync(cancellationToken);
+
+        if (cancellationToken.IsCancellationRequested || this == null)
+            return;
+
+        MoveOutScreen();
+    }
+
     private async UniTask LoadSpawnImageAsync(CancellationToken cancellationToken)
     {
-        if (_spawnImageReference != null)
+        if (_spawnImageReference == null || !_spawnImageReference.RuntimeKeyIsValid())
+            return;
+
+        // The instance is tracked by Addressables and released automatically when its scene unloads.
+        var handle = _spawnImageReference.InstantiateAsync(transform.position, Quaternion.identity);
+        try
         {
-            var spawnImage = await _spawnImageReference.InstantiateAsync().Task;
-            spawnImage.transform.position = transform.position;
-            spawnImage.name = spawnImage.name[..^7]; // Remove "(Clone)" from the name
+            await handle.ToUniTask();
         }
+        catch (System.Exception e)
+        {
+            Debug.LogException(e);
+        }
+
+        if (!handle.IsValid() || handle.Status != UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded || handle.Result == null)
+        {
+            Debug.LogError($"Failed to instantiate spawn image for {name}.");
+            if (handle.IsValid())
+                Addressables.Release(handle);
+            return;
+        }
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            // Owner destroyed mid-load (e.g. scene change): don't leave an orphaned instance.
+            Addressables.ReleaseInstance(handle.Result);
+            return;
+        }
+
+        var spawnImage = handle.Result;
+        if (spawnImage.name.EndsWith("(Clone)"))
+            spawnImage.name = spawnImage.name[..^7]; // Remove "(Clone)" from the name
     }
 
     private void MoveOutScreen()

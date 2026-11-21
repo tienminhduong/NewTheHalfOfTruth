@@ -18,6 +18,7 @@ public class BaseAnimSystem
     private readonly Dictionary<string, AnimationClip> _loadedClips = new();
 
     private bool _isInitialized = false;
+    private bool _isDestroyed = false;
     public bool IsInitialized => _isInitialized;
 
     public BaseAnimSystem(Animator animator)
@@ -51,18 +52,46 @@ public class BaseAnimSystem
                 Debug.LogWarning($"Invalid animation reference: {animRef.AssetGUID}");
         }
 
-        // Load the animation clips asynchronously using Addressables
-        _preloadHandle = Addressables.LoadAssetsAsync<AnimationClip>(keys, OnClipLoaded, Addressables.MergeMode.Union);
-        await _preloadHandle.ToUniTask();
+        if (keys.Count == 0)
+        {
+            Debug.LogWarning("No valid animation references to preload.");
+            return;
+        }
 
-        if (_preloadHandle.Status == AsyncOperationStatus.Succeeded)
+        // Load the animation clips asynchronously using Addressables
+        var handle = Addressables.LoadAssetsAsync<AnimationClip>(keys, OnClipLoaded, Addressables.MergeMode.Union);
+        _preloadHandle = handle;
+        AddressableLoadTracker.Track(handle);
+
+        try
+        {
+            await handle.ToUniTask();
+        }
+        catch (Exception e)
+        {
+            // Handle was released (owner destroyed) or the load threw; Destroy() owns releasing.
+            if (!_isDestroyed)
+                Debug.LogError($"Failed to preload animation clips: {e.Message}");
+            return;
+        }
+
+        // Owner was destroyed while loading: Destroy() already released the handle.
+        if (_isDestroyed || !handle.IsValid())
+            return;
+
+        if (handle.Status == AsyncOperationStatus.Succeeded)
         {
             _isInitialized = true;
             if (!string.IsNullOrEmpty(defaultAnimKey))
                 PlayAnimation(defaultAnimKey);
         }
         else
+        {
             Debug.LogError("Failed to preload animation clips.");
+            Addressables.Release(handle);
+            _preloadHandle = default;
+            _loadedClips.Clear();
+        }
     }
 
     private void SetupPlayableGraph(Animator animator)
@@ -74,6 +103,9 @@ public class BaseAnimSystem
 
     private void OnClipLoaded(AnimationClip clip)
     {
+        if (_isDestroyed)
+            return;
+
         if (clip == null)
         {
             Debug.LogError("Loaded animation clip is null.");
@@ -91,6 +123,9 @@ public class BaseAnimSystem
 
     public void PlayAnimation(AnimationClip clip)
     {
+        if (_isDestroyed || !_playableGraph.IsValid())
+            return;
+
         if (clip == _activeClip)
             return;
 
@@ -120,14 +155,20 @@ public class BaseAnimSystem
 
     public virtual void Destroy()
     {
+        if (_isDestroyed)
+            return;
+
+        _isDestroyed = true;
+        _isInitialized = false;
+
         if (_playableGraph.IsValid())
             _playableGraph.Destroy();
 
+        _activeClip = null;
+        _loadedClips.Clear();
+
         if (_preloadHandle.IsValid())
-        {
             Addressables.Release(_preloadHandle);
-            _preloadHandle = default;
-            _isInitialized = false;
-        }
+        _preloadHandle = default;
     }
 }
